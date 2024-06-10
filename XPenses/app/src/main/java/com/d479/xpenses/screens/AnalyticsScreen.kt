@@ -13,7 +13,7 @@ import com.d479.xpenses.ui.components.Navbar
 
 
 @Composable
-fun HomePage(modifier: Modifier, navController: NavHostController) {
+fun AnalyticsScreen(modifier: Modifier, navController: NavHostController) {
     Scaffold(
         bottomBar = {
             Navbar(modifier = modifier, navController = navController)
@@ -26,7 +26,7 @@ fun HomePage(modifier: Modifier, navController: NavHostController) {
                 .padding(paddingValues), // Apply the padding here
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "Home Page")
+            Text(text = "Analytics Page")
         }
     }
 }
