@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -33,7 +33,6 @@ import com.d479.xpenses.signIn.SignInViewModel
 import com.d479.xpenses.ui.theme.XPensesTheme
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.launch
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 class MainActivity : ComponentActivity() {
 
@@ -43,6 +42,7 @@ class MainActivity : ComponentActivity() {
             oneTapClient = Identity.getSignInClient(applicationContext)
         )
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -53,14 +53,17 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    NavHost(navController = navController, startDestination = Screens.SignIn.route) {
+                    NavHost(
+                        navController = navController,
+                        startDestination = Screens.SignIn.route
+                    ) {
                         composable(Screens.SignIn.route) {
                             val viewModel = viewModel<SignInViewModel>()
                             val state by viewModel.state.collectAsStateWithLifecycle()
 
                             // check if the user is signed in
                             LaunchedEffect(key1 = Unit) {
-                                if(googleAuthUiClient.getSignedInUser() != null) {
+                                if (googleAuthUiClient.getSignedInUser() != null) {
                                     navController.navigate(Screens.Home.route)
                                 }
                             }
@@ -107,19 +110,24 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(Screens.Home.route) {
-                            HomeScreen(modifier = Modifier, navController = navController, onSignOut = {
-                                lifecycleScope.launch {
-                                    googleAuthUiClient.signOut()
+                            HomeScreen(
+                                modifier = Modifier,
+                                navController = navController,
+                                onSignOut = {
+                                    lifecycleScope.launch {
+                                        googleAuthUiClient.signOut()
 
-                                    Toast.makeText(
-                                        applicationContext,
-                                        "Signed out successful",
-                                        Toast.LENGTH_LONG
-                                    ).show()
+                                        Toast.makeText(
+                                            applicationContext,
+                                            "Signed out successful",
+                                            Toast.LENGTH_LONG
+                                        ).show()
 
-                                    navController.navigate(Screens.SignIn.route)
-                                }
-                            }, userData = googleAuthUiClient.getSignedInUser())
+                                        navController.navigate(Screens.SignIn.route)
+                                    }
+                                },
+                                userData = googleAuthUiClient.getSignedInUser()
+                            )
                         }
                         composable(Screens.Expenses.route) {
                             ExpensesScreen(modifier = Modifier, navController = navController)

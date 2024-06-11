@@ -75,11 +75,12 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     // dependency for firebase
-    implementation("io.coil-kt:coil-compose:2.6.0")
-    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-auth-ktx")
-    implementation("com.google.android.gms:play-services-auth:21.1.1")
-    implementation("androidx.compose.material:material-icons-extended:1.4.3")
+    implementation(libs.coil.compose)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.play.services.auth)
+
+    implementation(libs.androidx.material.icons.extended)
 
 }
