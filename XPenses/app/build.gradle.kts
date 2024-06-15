@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.relayGradlePlugin)
     alias(libs.plugins.googleGmsGoogleServices)
-    id("kotlin-kapt")
+    id ("io.realm.kotlin") version "1.16.0"
 }
 
 android {
@@ -84,15 +84,8 @@ dependencies {
 
     implementation(libs.androidx.material.icons.extended)
 
-    // dependencies for room
-    val room_version = "2.6.1"
+    // dependency form realmdb
+    implementation ("io.realm.kotlin:library-base:1.16.0")
 
-    implementation("androidx.room:room-runtime:$room_version")
-    annotationProcessor("androidx.room:room-compiler:$room_version")
-    implementation("androidx.room:room-ktx:$room_version")
-
-
-    // To use Kotlin annotation processing tool (kapt)
-    kapt("androidx.room:room-compiler:$room_version")
 
 }
