@@ -11,10 +11,10 @@ import java.util.Date
 
 class Invoice: RealmObject {
     @PrimaryKey var _id: ObjectId = ObjectId()
-    var date: Date = Date()
+    var date: String = ""
     var local: String = ""
     val categories: RealmResults<Category> by backlinks(Category::invoices)
     var total: Double = 0.0
     var items: RealmList<Item> = realmListOf()
-    val user: User? = null
+    var user: User? = null
 }

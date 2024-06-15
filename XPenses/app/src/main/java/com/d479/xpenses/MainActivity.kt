@@ -10,11 +10,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -47,7 +46,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             XPensesTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -60,6 +58,9 @@ class MainActivity : ComponentActivity() {
                         composable(Screens.SignIn.route) {
                             val viewModel = viewModel<SignInViewModel>()
                             val state by viewModel.state.collectAsStateWithLifecycle()
+
+                            val localContext = LocalContext.current
+
 
                             // check if the user is signed in
                             LaunchedEffect(key1 = Unit) {
@@ -85,7 +86,7 @@ class MainActivity : ComponentActivity() {
                             LaunchedEffect(key1 = state.isSignInSuccessful) {
                                 if (state.isSignInSuccessful) {
                                     Toast.makeText(
-                                        applicationContext,
+                                        localContext,
                                         "Sign in successful",
                                         Toast.LENGTH_LONG
                                     ).show()
@@ -109,28 +110,38 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
+
                         composable(Screens.Home.route) {
+                            val homeViewModel: HomeScreenViewModel = viewModel()
+                            val localContext = LocalContext.current
+
                             HomeScreen(
                                 modifier = Modifier,
                                 navController = navController,
+                                viewModel = homeViewModel,
                                 onSignOut = {
                                     lifecycleScope.launch {
                                         googleAuthUiClient.signOut()
 
                                         Toast.makeText(
-                                            applicationContext,
+                                            localContext,
                                             "Signed out successful",
                                             Toast.LENGTH_LONG
                                         ).show()
+                                        homeViewModel.resetState()
 
                                         navController.navigate(Screens.SignIn.route)
                                     }
                                 },
-                                userData = googleAuthUiClient.getSignedInUser()
                             )
                         }
                         composable(Screens.Expenses.route) {
-                            ExpensesScreen(modifier = Modifier, navController = navController)
+                            val homeViewModel: HomeScreenViewModel = viewModel()
+                            ExpensesScreen(
+                                modifier = Modifier,
+                                navController = navController,
+                                viewModel = homeViewModel
+                            )
                         }
                         composable(Screens.Map.route) {
                             MapScreen(modifier = Modifier, navController = navController)
@@ -147,13 +158,5 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
 }
 

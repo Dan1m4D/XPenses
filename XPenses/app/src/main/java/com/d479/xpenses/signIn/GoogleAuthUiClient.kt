@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import com.d479.xpenses.R
+import com.d479.xpenses.repositories.UserRepository
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.Firebase
@@ -17,6 +18,8 @@ class GoogleAuthUiClient(
     private val oneTapClient: SignInClient
 ) {
     private val auth = Firebase.auth
+    private val userRepo = UserRepository()
+
 
     suspend fun signIn(): IntentSender? {
         val result = try {
@@ -61,6 +64,7 @@ class GoogleAuthUiClient(
         try {
             oneTapClient.signOut().await()
             auth.signOut()
+            userRepo.resetCurrentUser()
         } catch(e: Exception) {
             e.printStackTrace()
             if(e is CancellationException) throw e
