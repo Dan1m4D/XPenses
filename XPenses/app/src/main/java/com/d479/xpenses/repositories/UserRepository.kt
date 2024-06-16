@@ -44,16 +44,13 @@ class UserRepository {
                 currentUser = userIn
             }
         }
-        println("Current user -> " + currentUser.name + " " + currentUser.uid)
     }
 
     suspend fun getUser(): User? {
-        println("User -> " + currentUser.name + " " + currentUser.photoUrl)
         return realm
             .query<User>("uid == $0", currentUser.uid)
             .first()
             .find()
-
     }
 
     suspend fun updateUser(user: User) {

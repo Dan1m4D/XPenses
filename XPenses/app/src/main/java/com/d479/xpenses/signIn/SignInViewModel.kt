@@ -18,18 +18,21 @@ class SignInViewModel: ViewModel() {
             isSignInSuccessful = result.data != null,
             signInError = result.errorMessage
         ) }
-        userRepository.registerUser(
-            User().apply {
-                uid = result.data?.userId ?: ""
-                name = result.data?.username ?: ""
-                photoUrl = result.data?.profilePictureURL ?: ""
-            }
-        )
-
     }
 
     // Reset the state to the initial state
     fun resetState() {
         _state.update { SignInState() }
+    }
+
+    // Register the user in the repository
+    suspend fun loginUser(userData: UserData) {
+        userRepository.registerUser(
+            User().apply {
+                uid = userData.userId ?: ""
+                name = userData.username ?: ""
+                photoUrl = userData.profilePictureURL ?: ""
+            }
+        )
     }
 }

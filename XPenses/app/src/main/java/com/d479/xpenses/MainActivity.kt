@@ -59,13 +59,11 @@ class MainActivity : ComponentActivity() {
                             val viewModel = viewModel<SignInViewModel>()
                             val state by viewModel.state.collectAsStateWithLifecycle()
 
-                            val localContext = LocalContext.current
-
-
-                            // check if the user is signed in
                             LaunchedEffect(key1 = Unit) {
                                 if (googleAuthUiClient.getSignedInUser() != null) {
-                                    navController.navigate(Screens.Home.route)
+                                    navController.navigate("home")
+                                    println("User already signed in -> " + googleAuthUiClient.getSignedInUser()!!)
+                                    viewModel.loginUser(googleAuthUiClient.getSignedInUser()!!)
                                 }
                             }
 
@@ -78,6 +76,7 @@ class MainActivity : ComponentActivity() {
                                                 intent = result.data ?: return@launch
                                             )
                                             viewModel.onSignInResult(signInResult)
+                                            viewModel.loginUser(signInResult.data!!)
                                         }
                                     }
                                 }
@@ -86,12 +85,12 @@ class MainActivity : ComponentActivity() {
                             LaunchedEffect(key1 = state.isSignInSuccessful) {
                                 if (state.isSignInSuccessful) {
                                     Toast.makeText(
-                                        localContext,
+                                        applicationContext,
                                         "Sign in successful",
                                         Toast.LENGTH_LONG
                                     ).show()
 
-                                    navController.navigate(Screens.Home.route)
+                                    navController.navigate("home")
                                     viewModel.resetState()
                                 }
                             }
@@ -136,11 +135,9 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(Screens.Expenses.route) {
-                            val homeViewModel: HomeScreenViewModel = viewModel()
                             ExpensesScreen(
                                 modifier = Modifier,
                                 navController = navController,
-                                viewModel = homeViewModel
                             )
                         }
                         composable(Screens.Map.route) {

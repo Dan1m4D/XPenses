@@ -24,11 +24,8 @@ import com.d479.xpenses.ui.components.Navbar
 fun ExpensesScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    viewModel: HomeScreenViewModel
 ) {
 
-    val user by viewModel.user.collectAsState()
-    val allUsers by viewModel.allUsers.collectAsState()
 
     Scaffold(
         bottomBar = {
@@ -42,35 +39,7 @@ fun ExpensesScreen(
                 .padding(paddingValues), // Apply the padding here
             contentAlignment = Alignment.Center
         ) {
-//            Text(text = "Expenses Page")
-//            Row(
-//                modifier = modifier.padding(16.dp),
-//                verticalAlignment = Alignment.CenterVertically,
-//                horizontalArrangement = Arrangement.End
-//            ) {
-//
-//                Text(text = "User: ${user?.name}")
-//                AsyncImage(
-//                    model = user?.photoUrl,
-//                    contentDescription = "Avatar",
-//                    modifier = modifier
-//                        .size(40.dp)
-//                        .clip(CircleShape)
-//                )
-//            }
-
-            LazyColumn {
-                items(allUsers) { user ->
-                    Row {
-                        AsyncImage(
-                            model = user.photoUrl,
-                            contentDescription = user.name,
-                            modifier = Modifier.size(40.dp)
-                        )
-                        Text(text = user.name)
-                    }
-                }
-            }
+            Text(text = "Expenses Page")
         }
     }
 

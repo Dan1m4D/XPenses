@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.d479.xpenses.HomeScreenViewModel
 import com.d479.xpenses.R
+import com.d479.xpenses.navigation.Screens
+import com.d479.xpenses.ui.components.Greeting
 import com.d479.xpenses.ui.components.Navbar
 
 @Composable
@@ -34,6 +36,11 @@ fun HomeScreen(
     onSignOut: () -> Unit
 ) {
     val user by viewModel.user.collectAsState()
+
+    if (user == null) {
+        onSignOut()
+        navController.navigate(Screens.SignIn.route)
+    }
 
     Scaffold(
         bottomBar = {
@@ -69,14 +76,12 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
             ) {
-                Text(text = "Hello ${user?.name}!")
-                Text(text = "Home Page")
+                Greeting(modifier = modifier, name = viewModel.getName())
                 Button(onClick = onSignOut) {
                     Text("Sign Out")
                 }
+
             }
         }
     }

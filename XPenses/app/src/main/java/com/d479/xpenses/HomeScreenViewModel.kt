@@ -16,7 +16,7 @@ class HomeScreenViewModel : ViewModel() {
     private val _user = MutableStateFlow<User?>(null)
     private val _allUsers = MutableStateFlow<List<User>>(emptyList())
     val user: StateFlow<User?> = _user
-val allUsers: StateFlow<List<User>> = _allUsers
+    val allUsers: StateFlow<List<User>> = _allUsers
 
     init {
         viewModelScope.launch {
@@ -34,5 +34,9 @@ val allUsers: StateFlow<List<User>> = _allUsers
     suspend fun resetState() {
         _user.value = null
         userRepository.resetCurrentUser()
+    }
+
+    fun getName(): String {
+        return user.value?.name?.split(" ")?.get(0).toString()
     }
 }
