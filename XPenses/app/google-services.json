@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "942109026103",
+    "project_id": "xpenses-de115",
+    "storage_bucket": "xpenses-de115.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:942109026103:android:2b83705f0fe31a853a9cb2",
+        "android_client_info": {
+          "package_name": "com.d479.xpenses"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhT4ujTsqAJnUV3iAc5FIvvgZcSWKLjTk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
