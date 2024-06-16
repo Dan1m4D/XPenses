@@ -38,8 +38,8 @@ fun HomeScreen(
     val user by viewModel.user.collectAsState()
 
     if (user == null) {
-        onSignOut()
         navController.navigate(Screens.SignIn.route)
+        onSignOut()
     }
 
     Scaffold(
@@ -47,7 +47,7 @@ fun HomeScreen(
             Navbar(modifier = modifier, navController = navController)
         },
         topBar = {
-            HeaderActions(modifier, user?.photoUrl)
+            HeaderActions(modifier, user?.photoUrl, onSignOut)
         },
         floatingActionButton = {
             Button(
@@ -78,10 +78,6 @@ fun HomeScreen(
                     .padding(16.dp),
             ) {
                 Greeting(modifier = modifier, name = viewModel.getName())
-                Button(onClick = onSignOut) {
-                    Text("Sign Out")
-                }
-
             }
         }
     }
