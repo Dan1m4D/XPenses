@@ -3,7 +3,8 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.relayGradlePlugin)
     alias(libs.plugins.googleGmsGoogleServices)
-    id ("io.realm.kotlin") version "1.16.0"
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id("io.realm.kotlin") version "1.16.0"
 }
 
 android {
@@ -32,6 +33,22 @@ android {
             )
         }
     }
+
+    secrets {
+        // Optionally specify a different file name containing your secrets.
+        // The plugin defaults to "local.properties"
+        propertiesFileName = "secrets.properties"
+
+        // A properties file containing default secret values. This file can be
+        // checked in version control.
+        defaultPropertiesFileName = "local.defaults.properties"
+
+        // Configure which keys should be ignored by the plugin by providing regular expressions.
+        // "sdk.dir" is ignored by default.
+        ignoreList.add("keyToIgnore") // Ignore the key "keyToIgnore"
+        ignoreList.add("sdk.*")       // Ignore all keys matching the regexp "sdk.*"
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -86,16 +103,20 @@ dependencies {
 
     implementation(libs.androidx.material.icons.extended)
 
+    // Maps SDK for Android
+    implementation(libs.play.services.maps)
+    // Android Maps Compose composables for the Maps SDK for Android
+    implementation(libs.maps.compose)
+
     //dependency for lm kit
-    implementation ("com.google.mlkit:text-recognition:16.0.0")
+    implementation(libs.text.recognition)
 
     //pode dar jeito
-    implementation("androidx.collection:collection:1.4.0")
+    implementation(libs.androidx.collection.ktx)
 
     // dependency form realmdb
-    implementation ("io.realm.kotlin:library-base:1.16.0")
+    implementation(libs.library.base)
 
-    implementation ("androidx.camera:camera-core:1.3.4")
-
+    implementation(libs.androidx.camera.core)
 
 }
