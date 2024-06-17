@@ -94,6 +94,7 @@ dependencies {
     // dependency form realmdb
     implementation ("io.realm.kotlin:library-base:1.16.0")
 
+    implementation ("androidx.camera:camera-core:1.3.4")
 
 
 }
