@@ -82,13 +82,13 @@ fun HomeScreen(
             ) {
                 Greeting(modifier = modifier, name = viewModel.getName())
                 AnalyticsCard(
-                    data = listOf(
-                        100.00,
-                        50.00,
-                        23.00,
-                        123.00,
-                        200.00,
-                    )
+//                    data = listOf(
+//                        100.00,
+//                        50.00,
+//                        23.00,
+//                        123.00,
+//                        200.00,
+//                    )
                 )
             }
         }

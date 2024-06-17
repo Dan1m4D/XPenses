@@ -5,3 +5,8 @@ plugins {
     alias(libs.plugins.googleGmsGoogleServices) apply false
     id("io.realm.kotlin") version "1.16.0" apply false
 }
+buildscript {
+    dependencies {
+        classpath(libs.secrets.gradle.plugin)
+    }
+}
