@@ -1,86 +1,86 @@
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.focusModifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HeaderActions(
     modifier: Modifier = Modifier,
     profilePictureURL: String?,
+    bgColor: Color = MaterialTheme.colorScheme.surface,
     onSignOut: () -> Unit
 ) {
-    Row(
-        modifier = modifier
-            .padding(horizontal = 24.dp, vertical = 16.dp)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-
-    ) {
-
-        Icon(
-            imageVector = Icons.Outlined.Menu,
-            contentDescription = "Drawer",
-            tint = MaterialTheme.colorScheme.secondary,
-            modifier = modifier.size(40.dp)
-        )
-
-        Row(
-            modifier = modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.End
-        ) {
-            Box(
+    TopAppBar(
+        title = {},
+        navigationIcon = {
+            Icon(
+                imageVector = Icons.Outlined.Menu,
+                contentDescription = "Menu",
+                modifier = Modifier.size(30.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+        },
+        actions = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End,
                 modifier = modifier
-                    .size(45.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.secondary,
-                        shape = CircleShape
-                    ),
-                contentAlignment = Alignment.Center,
             ) {
-                Icon(
-                    imageVector = Icons.Outlined.Notifications,
-                    contentDescription = "Notification",
-                    tint = MaterialTheme.colorScheme.onSecondary
-                )
-            }
+                Spacer(modifier = modifier.size(8.dp))
+                Box(
+                    modifier = modifier
+                        .size(40.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            shape = CircleShape
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
 
-            Spacer(modifier = Modifier.size(16.dp))
-
-            if (profilePictureURL != null) {
+                    Icon(
+                        imageVector = Icons.Outlined.Notifications,
+                        contentDescription = "Notifications",
+                        modifier = Modifier
+                            .size(30.dp),
+                        tint = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                }
+                Spacer(modifier = modifier.size(16.dp))
                 AsyncImage(
                     model = profilePictureURL,
-                    contentDescription = "Avatar",
-                    modifier = modifier
+                    contentDescription = "avatar",
+                    modifier = Modifier
                         .size(45.dp)
-                        .clip(CircleShape)
-                        .clickable {
-                            onSignOut()
-                        }
+                        .clip(shape = CircleShape)
                 )
-
+                Spacer(modifier = modifier.size(8.dp))
             }
-        }
-    }
-
-
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = bgColor,
+            titleContentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        modifier = modifier.padding(vertical = 8.dp, horizontal = 16.dp)
+    )
 }

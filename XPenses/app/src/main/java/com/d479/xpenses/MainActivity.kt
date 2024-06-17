@@ -30,6 +30,8 @@ import com.d479.xpenses.screens.SignInScreen
 import com.d479.xpenses.screens.SplitScreen
 import com.d479.xpenses.signIn.GoogleAuthUiClient
 import com.d479.xpenses.signIn.SignInViewModel
+import com.d479.xpenses.viewModels.HomeScreenViewModel
+import com.d479.xpenses.viewModels.MapViewModel
 import com.example.compose.XPensesTheme
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.launch
@@ -112,8 +114,8 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(Screens.Home.route) {
-                            val homeViewModel: HomeScreenViewModel = viewModel()
                             val localContext = LocalContext.current
+                            val homeViewModel = viewModel<HomeScreenViewModel>()
 
                             HomeScreen(
                                 modifier = Modifier,
@@ -139,10 +141,18 @@ class MainActivity : ComponentActivity() {
                             ExpensesScreen(
                                 modifier = Modifier,
                                 navController = navController,
-                            )
+
+                                )
                         }
                         composable(Screens.Map.route) {
-                            MapScreen(modifier = Modifier, navController = navController)
+
+                            val mapViewModel = viewModel<MapViewModel>()
+
+                            MapScreen(
+                                modifier = Modifier,
+                                navController = navController,
+                                viewModel = mapViewModel
+                            )
                         }
                         composable(Screens.Analytics.route) {
                             AnalyticsScreen(modifier = Modifier, navController = navController)

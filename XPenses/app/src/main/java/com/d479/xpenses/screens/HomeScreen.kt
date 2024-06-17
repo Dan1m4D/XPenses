@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Scaffold
@@ -22,12 +20,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.d479.xpenses.HomeScreenViewModel
 import com.d479.xpenses.R
 import com.d479.xpenses.navigation.Screens
 import com.d479.xpenses.ui.components.AnalyticsCard
 import com.d479.xpenses.ui.components.Greeting
 import com.d479.xpenses.ui.components.Navbar
+import com.d479.xpenses.viewModels.HomeScreenViewModel
 
 @Composable
 fun HomeScreen(
@@ -48,7 +46,11 @@ fun HomeScreen(
             Navbar(modifier = modifier, navController = navController)
         },
         topBar = {
-            HeaderActions(modifier, user?.photoUrl, onSignOut)
+            HeaderActions(
+                modifier = modifier,
+                profilePictureURL = user?.photoUrl,
+                onSignOut = onSignOut
+            )
         },
         floatingActionButton = {
             FloatingActionButton(

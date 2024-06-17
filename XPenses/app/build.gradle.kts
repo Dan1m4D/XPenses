@@ -101,6 +101,7 @@ dependencies {
     implementation(libs.firebase.auth.ktx)
     implementation(libs.play.services.auth)
 
+    // more icons instead of vector image importing
     implementation(libs.androidx.material.icons.extended)
 
     // Maps SDK for Android
@@ -108,14 +109,18 @@ dependencies {
     // Android Maps Compose composables for the Maps SDK for Android
     implementation(libs.maps.compose)
 
+    // dependency form realmdb
+    implementation(libs.library.base)
+
+    // dependency for permissions
+    implementation (libs.accompanist.permissions)
+
     //dependency for lm kit
     implementation(libs.text.recognition)
 
     //pode dar jeito
     implementation(libs.androidx.collection.ktx)
 
-    // dependency form realmdb
-    implementation(libs.library.base)
 
     implementation(libs.androidx.camera.core)
 
