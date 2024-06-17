@@ -1,5 +1,16 @@
 package com.d479.xpenses.ui.components
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DonutSmall
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.filled.People
+import androidx.compose.material.icons.filled.RequestPage
+import androidx.compose.material.icons.outlined.DonutSmall
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Map
+import androidx.compose.material.icons.outlined.People
+import androidx.compose.material.icons.outlined.RequestPage
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -9,16 +20,14 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
-import com.d479.xpenses.R
 import com.d479.xpenses.navigation.Screens
 
 data class NavItem(
     val label: String,
-    val selectedIcon: Int,
-    val unselectedIcon: Int,
+    val selectedIcon: ImageVector,
+    val unselectedIcon: ImageVector,
     val hasNews: Boolean,
     val badgeCounter: Int? = null,
     val route: String
@@ -34,37 +43,37 @@ fun Navbar(
     val items = listOf(
         NavItem(
             label = "Expenses",
-            selectedIcon = R.drawable.request_page_filled,
-            unselectedIcon = R.drawable.request_page_oulined,
+            selectedIcon = Icons.Filled.RequestPage,
+            unselectedIcon = Icons.Outlined.RequestPage,
             hasNews = false,
             route = Screens.Expenses.route
         ),
         NavItem(
             label = "Map",
-            selectedIcon = R.drawable.map_filled,
-            unselectedIcon = R.drawable.map_outlined,
+            selectedIcon = Icons.Filled.Map,
+            unselectedIcon = Icons.Outlined.Map,
             hasNews = false,
             route = Screens.Map.route
         ),
         NavItem(
             label = "Home",
-            selectedIcon = R.drawable.home_filled,
-            unselectedIcon = R.drawable.home_outlined,
+            selectedIcon = Icons.Filled.Home,
+            unselectedIcon = Icons.Outlined.Home,
             hasNews = false,
             route = Screens.Home.route
         ),
         NavItem(
             label = "Split",
-            selectedIcon = R.drawable.divider_filled,
-            unselectedIcon = R.drawable.divider_filled,
+            selectedIcon = Icons.Filled.People,
+            unselectedIcon = Icons.Outlined.People,
             hasNews = true,
             badgeCounter = 2,
             route = Screens.Split.route
         ),
         NavItem(
             label = "Analytics",
-            selectedIcon = R.drawable.donut_filled,
-            unselectedIcon = R.drawable.donut_outlined,
+            selectedIcon = Icons.Filled.DonutSmall,
+            unselectedIcon = Icons.Outlined.DonutSmall,
             hasNews = false,
             route = Screens.Analytics.route
         )
@@ -92,9 +101,8 @@ fun Navbar(
 
                         }) {
                         Icon(
-                            painter = painterResource(
-                                id = if (navController.currentDestination?.route == item.route) item.selectedIcon else item.unselectedIcon
-                            ),
+                            imageVector =
+                            if (navController.currentDestination?.route == item.route) item.selectedIcon else item.unselectedIcon,
                             contentDescription = item.label
                         )
                     }

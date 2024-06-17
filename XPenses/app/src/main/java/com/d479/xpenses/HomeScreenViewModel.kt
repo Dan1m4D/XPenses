@@ -1,5 +1,9 @@
 package com.d479.xpenses
 
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.d479.xpenses.models.User
@@ -14,20 +18,12 @@ import kotlinx.coroutines.launch
 class HomeScreenViewModel : ViewModel() {
     private val userRepository = UserRepository()
     private val _user = MutableStateFlow<User?>(null)
-    private val _allUsers = MutableStateFlow<List<User>>(emptyList())
     val user: StateFlow<User?> = _user
-    val allUsers: StateFlow<List<User>> = _allUsers
 
     init {
         viewModelScope.launch {
             val fetchedUser = userRepository.getUser()
             _user.emit(fetchedUser)
-
-            val allUsers = userRepository.getAllUsers()
-            _allUsers.emitAll(allUsers)
-            allUsers.collect {
-                println("All users -> $it")
-            }
         }
     }
 

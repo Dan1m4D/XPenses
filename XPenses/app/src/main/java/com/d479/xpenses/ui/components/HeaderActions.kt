@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -25,45 +26,61 @@ fun HeaderActions(
     profilePictureURL: String?,
     onSignOut: () -> Unit
 ) {
-
     Row(
         modifier = modifier
-            .padding(16.dp)
+            .padding(horizontal = 24.dp, vertical = 16.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.End
+        horizontalArrangement = Arrangement.SpaceBetween
+
     ) {
-        Box(
+
+        Icon(
+            imageVector = Icons.Outlined.Menu,
+            contentDescription = "Drawer",
+            tint = MaterialTheme.colorScheme.secondary,
+            modifier = modifier.size(40.dp)
+        )
+
+        Row(
             modifier = modifier
-                .size(45.dp)
-                .background(
-                    color = MaterialTheme.colorScheme.secondary,
-                    shape = CircleShape
-                ),
-            contentAlignment = Alignment.Center,
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.End
         ) {
-            Icon(
-                imageVector = Icons.Outlined.Notifications,
-                contentDescription = "Notification",
-                tint = MaterialTheme.colorScheme.onSecondary
-            )
-        }
-
-        Spacer(modifier = Modifier.size(16.dp) )
-
-        if (profilePictureURL != null) {
-            AsyncImage(
-                model = profilePictureURL,
-                contentDescription = "Avatar",
+            Box(
                 modifier = modifier
                     .size(45.dp)
-                    .clip(CircleShape)
-                    .clickable {
-                        onSignOut()
-                    }
-            )
+                    .background(
+                        color = MaterialTheme.colorScheme.secondary,
+                        shape = CircleShape
+                    ),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Notifications,
+                    contentDescription = "Notification",
+                    tint = MaterialTheme.colorScheme.onSecondary
+                )
+            }
 
+            Spacer(modifier = Modifier.size(16.dp))
+
+            if (profilePictureURL != null) {
+                AsyncImage(
+                    model = profilePictureURL,
+                    contentDescription = "Avatar",
+                    modifier = modifier
+                        .size(45.dp)
+                        .clip(CircleShape)
+                        .clickable {
+                            onSignOut()
+                        }
+                )
+
+            }
         }
     }
+
 
 }

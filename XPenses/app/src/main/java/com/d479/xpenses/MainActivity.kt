@@ -29,7 +29,7 @@ import com.d479.xpenses.screens.SignInScreen
 import com.d479.xpenses.screens.SplitScreen
 import com.d479.xpenses.signIn.GoogleAuthUiClient
 import com.d479.xpenses.signIn.SignInViewModel
-import com.d479.xpenses.ui.theme.XPensesTheme
+import com.example.compose.XPensesTheme
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.launch
 
