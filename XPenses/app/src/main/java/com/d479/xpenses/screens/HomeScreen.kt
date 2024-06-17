@@ -52,7 +52,7 @@ fun HomeScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /*TODO*/ },
+                onClick = { navController.navigate(Screens.Scan.route) },
                 modifier = Modifier.size(75.dp),
                 shape = CircleShape,
                 containerColor = Color(0xFFBCF0B4),

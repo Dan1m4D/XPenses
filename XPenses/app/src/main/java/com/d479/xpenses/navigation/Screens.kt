@@ -7,4 +7,5 @@ sealed class Screens(val route: String) {
     object Split : Screens("split")
     object Analytics : Screens("analytics")
     object SignIn : Screens("signIn")
+    object Scan: Screens("scan")
 }

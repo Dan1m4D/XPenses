@@ -1,8 +1,10 @@
 package com.d479.xpenses.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun AnalyticsCard(modifier: Modifier = Modifier, data: List<Double>) {
+fun AnalyticsCard(modifier: Modifier = Modifier, data: List<Double> = emptyList()) {
 
     val localConfiguration = LocalConfiguration.current
     val screenHeight = localConfiguration.screenHeightDp.dp
@@ -60,7 +62,7 @@ fun AnalyticsCard(modifier: Modifier = Modifier, data: List<Double>) {
                 }
             }
 
-            if (data.isNotEmpty()) {
+            if (data.isNotEmpty())  {
                 // if data length is less than 7, pad the data with 0s before feed to the barGraph
                 val paddedData = if (data.size < 7) {
                     data + List(7 - data.size) { 0.0 }
@@ -74,7 +76,10 @@ fun AnalyticsCard(modifier: Modifier = Modifier, data: List<Double>) {
 
 
             } else {
-                Text(text = "No transactions yet")
+                Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+
+                    Text(text = "No transactions yet")
+                }
             }
 
         }

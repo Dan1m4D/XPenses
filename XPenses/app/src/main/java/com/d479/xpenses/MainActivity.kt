@@ -25,6 +25,7 @@ import com.d479.xpenses.screens.AnalyticsScreen
 import com.d479.xpenses.screens.ExpensesScreen
 import com.d479.xpenses.screens.HomeScreen
 import com.d479.xpenses.screens.MapScreen
+import com.d479.xpenses.screens.ScanScreen
 import com.d479.xpenses.screens.SignInScreen
 import com.d479.xpenses.screens.SplitScreen
 import com.d479.xpenses.signIn.GoogleAuthUiClient
@@ -148,6 +149,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Screens.Split.route) {
                             SplitScreen(modifier = Modifier, navController = navController)
+                        }
+                        composable(Screens.Scan.route) {
+                            ScanScreen(modifier = Modifier, navController = navController)
                         }
                     }
 
