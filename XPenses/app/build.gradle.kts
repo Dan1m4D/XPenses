@@ -41,6 +41,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -72,7 +73,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
     //dependency for the navigation.
     implementation(libs.androidx.navigation.compose)
 
@@ -85,8 +85,15 @@ dependencies {
 
     implementation(libs.androidx.material.icons.extended)
 
+    //dependency for lm kit
+    implementation ("com.google.mlkit:text-recognition:16.0.0")
+
+    //pode dar jeito
+    implementation("androidx.collection:collection:1.4.0")
+
     // dependency form realmdb
     implementation ("io.realm.kotlin:library-base:1.16.0")
+
 
 
 }
