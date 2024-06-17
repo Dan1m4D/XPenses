@@ -13,7 +13,7 @@ class Invoice: RealmObject {
     @PrimaryKey var _id: ObjectId = ObjectId()
     var date: String = ""
     var local: String = ""
-    val categories: RealmResults<Category> by backlinks(Category::invoices)
+    var categories: Category? = null
     var total: Double = 0.0
     var items: RealmList<Item> = realmListOf()
     var user: User? = null
