@@ -144,6 +144,7 @@ fun ScanScreen(modifier: Modifier = Modifier, navController: NavHostController) 
                                         selectedWordIndices.remove(wordIndex)
                                     } else {
                                         selectedWordIndices.add(wordIndex)
+                                        selectedWords.add(word)
                                     }
                                 }
                         }
@@ -169,7 +170,7 @@ fun ScanScreen(modifier: Modifier = Modifier, navController: NavHostController) 
             Text(text = "Show Selected Words")
         }
         if (showSelectedWordsDialog) {
-            ShowSelectedWordsDialog(selectedWords, recognizedText) {
+            ShowSelectedWordsDialog(selectedWordIndices, recognizedText) {
                 showSelectedWordsDialog = false
             }
         }
@@ -209,19 +210,38 @@ fun recognizeTextFromImage(context: Context, imageUri: Uri, onTextRecognized: (S
 }
 
 @Composable
-fun ShowSelectedWordsDialog(selectedWords: List<String>, recognizedText: String, onClose: () -> Unit) {
+fun ShowSelectedWordsDialog(selectedWordIndices: List<Int>, recognizedText: String, onClose: () -> Unit) {
     val context = LocalContext.current
+
+    // Cria a lista de palavras selecionadas e remove \n de cada palavra
+    val words = recognizedText.split(" ")
+    val selectedWords = words.filterIndexed { index, _ -> selectedWordIndices.contains(index) }
+        .map { it.replace("\n", "") }
+
+    // Organiza as palavras em pares de item e preço
+    val organizedWords = mutableListOf<String>()
+    var tempItem = ""
+
+    for (word in selectedWords) {
+        if (word.matches(Regex(".*\\d.*"))) {  // Verifica se a palavra contém dígitos
+            if (tempItem.isNotEmpty()) {
+                organizedWords.add("$tempItem $word")
+                tempItem = ""
+            } else {
+                organizedWords.add(word)
+            }
+        } else {
+            tempItem = if (tempItem.isEmpty()) word else "$tempItem $word"
+        }
+    }
 
     AlertDialog(
         onDismissRequest = onClose,
         title = { Text("Selected Words") },
         text = {
             Column {
-                selectedWords.forEach { word ->
-                    val wordIndex = recognizedText.indexOf(word)
-                    if (wordIndex != -1) {
-                        Text(text = recognizedText.substring(wordIndex, wordIndex + word.length))
-                    }
+                organizedWords.forEach { item ->
+                    Text(text = item)
                 }
             }
         },
@@ -232,3 +252,4 @@ fun ShowSelectedWordsDialog(selectedWords: List<String>, recognizedText: String,
         }
     )
 }
+
