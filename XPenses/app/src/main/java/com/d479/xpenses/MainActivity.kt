@@ -31,6 +31,7 @@ import com.d479.xpenses.screens.SignInScreen
 import com.d479.xpenses.screens.SplitScreen
 import com.d479.xpenses.signIn.GoogleAuthUiClient
 import com.d479.xpenses.signIn.SignInViewModel
+import com.d479.xpenses.viewModels.AnalyticsViewModel
 import com.d479.xpenses.viewModels.HomeScreenViewModel
 import com.d479.xpenses.viewModels.MapViewModel
 import com.example.compose.XPensesTheme
@@ -196,7 +197,9 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(Screens.Analytics.route) {
-                            AnalyticsScreen(modifier = Modifier, navController = navController)
+                            val analyticsViewModel = viewModel<AnalyticsViewModel>()
+
+                            AnalyticsScreen(modifier = Modifier, navController = navController, viewModel = analyticsViewModel)
                         }
                         composable(Screens.Split.route) {
                             SplitScreen(modifier = Modifier, navController = navController)

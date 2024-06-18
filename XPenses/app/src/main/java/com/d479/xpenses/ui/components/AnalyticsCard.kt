@@ -21,7 +21,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun AnalyticsCard(modifier: Modifier = Modifier, data: List<Double> = emptyList()) {
+fun AnalyticsCard(
+    modifier: Modifier = Modifier,
+    data: List<Double> = emptyList(),
+    barTitle: String
+) {
 
     val localConfiguration = LocalConfiguration.current
     val screenHeight = localConfiguration.screenHeightDp.dp
@@ -72,7 +76,7 @@ fun AnalyticsCard(modifier: Modifier = Modifier, data: List<Double> = emptyList(
                 } else {
                     data
                 }
-                BarGraph(data = paddedData, title = "Last 7 days")
+                BarGraph(data = paddedData, title = barTitle)
 
 
             } else {

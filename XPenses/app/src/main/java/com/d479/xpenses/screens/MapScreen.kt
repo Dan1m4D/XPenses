@@ -101,16 +101,6 @@ fun MapScreen(
                         )
                     }
                 }
-
-
-                Text(
-                    text = "${userLocation.latitude}, ${userLocation.longitude}",
-                    modifier = Modifier
-                        .background(
-                            Color.White
-                        )
-                        .padding(16.dp)
-                )
             }
         }
     }

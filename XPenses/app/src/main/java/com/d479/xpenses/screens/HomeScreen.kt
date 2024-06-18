@@ -2,7 +2,6 @@ package com.d479.xpenses.screens
 
 import HeaderActions
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,7 +15,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -25,8 +23,8 @@ import androidx.navigation.NavHostController
 import com.d479.xpenses.R
 import com.d479.xpenses.navigation.Screens
 import com.d479.xpenses.ui.components.AnalyticsCard
-import com.d479.xpenses.ui.components.Greeting
 import com.d479.xpenses.ui.components.Navbar
+import com.d479.xpenses.ui.components.TitleMessage
 import com.d479.xpenses.viewModels.HomeScreenViewModel
 
 @Composable
@@ -72,7 +70,7 @@ fun HomeScreen(
         floatingActionButtonPosition = FabPosition.Center,
         modifier = modifier
             .fillMaxSize(),
-    ) { paddingValues  ->
+    ) { paddingValues ->
 
         Column(
             modifier = Modifier
@@ -81,7 +79,7 @@ fun HomeScreen(
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState()),
         ) {
-            Greeting(modifier = modifier, name = viewModel.getName())
+            TitleMessage(modifier = modifier, text1 = "Hello ", text2 = viewModel.getName())
             AnalyticsCard(
                 data = listOf(
                     100.00,
@@ -89,7 +87,8 @@ fun HomeScreen(
                     23.00,
                     123.00,
                     200.00,
-                )
+                ),
+                barTitle = "Last 7 days"
             )
 
         }
