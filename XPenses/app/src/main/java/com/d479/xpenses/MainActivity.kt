@@ -146,7 +146,6 @@ class MainActivity : ComponentActivity() {
                                             Toast.LENGTH_LONG
                                         ).show()
                                         homeViewModel.resetState()
-
                                         navController.navigate(Screens.SignIn.route)
                                     }
                                 },

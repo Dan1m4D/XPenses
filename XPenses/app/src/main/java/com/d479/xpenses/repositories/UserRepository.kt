@@ -7,6 +7,7 @@ import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.ext.realmListOf
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.map
 
 class UserRepository {
@@ -79,6 +80,10 @@ class UserRepository {
     }
 
     fun getUserInvoices(): Flow<List<Invoice>> {
+        if (currentUser.uid == "") {
+            return emptyList<List<Invoice>>().asFlow()
+        }
+
         return realm
             .query<Invoice>("user == $0", currentUser)
             .asFlow()

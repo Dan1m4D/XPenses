@@ -1,4 +1,5 @@
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -37,7 +38,9 @@ fun HeaderActions(
             Icon(
                 imageVector = Icons.Outlined.Menu,
                 contentDescription = "Menu",
-                modifier = Modifier.size(30.dp),
+                modifier = Modifier.size(30.dp).clickable {
+                    onSignOut()
+                },
                 tint = MaterialTheme.colorScheme.primary
             )
         },
