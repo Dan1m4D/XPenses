@@ -26,11 +26,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.XPenses">
-
-        <service
-            android:name=".location.LocationService"
-            android:foregroundServiceType="location" />
+        android:theme="@style/Theme.XPenses"
+        android:enableOnBackInvokedCallback="true"
+        tools:targetApi="tiramisu">
 
         <activity
             android:name=".MainActivity"

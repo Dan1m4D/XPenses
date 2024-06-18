@@ -1,5 +1,6 @@
 package com.d479.xpenses.viewModels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.d479.xpenses.models.Invoice
@@ -26,7 +27,7 @@ class HomeScreenViewModel : ViewModel() {
         viewModelScope.launch {
             val fetchedUser = userRepository.getUser()
             _user.emit(fetchedUser)
-            
+
             val fetchedInvoices = userRepository.getUserInvoices()
             _invoices.emitAll(fetchedInvoices)
         }
@@ -74,6 +75,5 @@ class HomeScreenViewModel : ViewModel() {
         val totalPerDaySorted = totalPerDay.toSortedMap()
 
         return totalPerDaySorted.values.toList()
-
     }
 }

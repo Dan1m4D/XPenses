@@ -1,14 +1,16 @@
 package com.d479.xpenses.repositories
 
+import android.util.Log
 import com.d479.xpenses.XpensesApp
 import com.d479.xpenses.models.Invoice
 import com.d479.xpenses.models.User
 import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.ext.realmListOf
+import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.map
+import java.util.Date
 
 class UserRepository {
     private val realm = XpensesApp.realm
@@ -28,6 +30,17 @@ class UserRepository {
             if (existingUser != null) {
                 // If a user with the same uid exists, set currentUser to that user
                 currentUser = existingUser
+                Log.d(
+                    "UserRepository",
+                    "User ${currentUser.name} already exists -> ${
+                        Date(
+                            currentUser.timestamp.epochSeconds * 1000
+                        )
+                    }"
+                )
+                copyToRealm(user.apply {
+                    timestamp = RealmInstant.now()
+                }, updatePolicy = UpdatePolicy.ALL)
             } else {
                 // If no user with the same uid exists, insert the new user
                 val userIn = User().apply {
@@ -35,6 +48,7 @@ class UserRepository {
                     name = user.name
                     photoUrl = user.photoUrl
                     invoices = realmListOf()
+                    timestamp = RealmInstant.now()
                 }
                 copyToRealm(userIn, updatePolicy = UpdatePolicy.ALL)
 
@@ -79,16 +93,18 @@ class UserRepository {
         currentUser = User()
     }
 
-    fun getUserInvoices(): Flow<List<Invoice>> {
-        if (currentUser.uid == "") {
-            return emptyList<List<Invoice>>().asFlow()
-        }
+    suspend fun getUserInvoices(): Flow<List<Invoice>> {
+        Log.d("UserRepository", "Fetching invoices in getUserInvoices()...")
+
+        val managedUser = getUser()
 
         return realm
-            .query<Invoice>("user == $0", currentUser)
+            .query<Invoice>("user == $0", managedUser)
             .asFlow()
             .map { results ->
+                Log.d("UserRepository", "Fetched ${results.list.toList().size} invoices")
                 results.list.toList()
             }
+
     }
 }

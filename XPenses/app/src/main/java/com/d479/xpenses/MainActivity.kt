@@ -93,7 +93,7 @@ class MainActivity : ComponentActivity() {
                                                 intent = result.data ?: return@launch
                                             )
                                             viewModel.onSignInResult(signInResult)
-                                            viewModel.loginUser(signInResult.data!!)
+                                            viewModel.loginUser(signInResult.data?: return@launch)
                                         }
                                     }
                                 }

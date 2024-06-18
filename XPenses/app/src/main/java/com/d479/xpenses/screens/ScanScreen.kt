@@ -27,7 +27,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -52,20 +51,13 @@ import com.d479.xpenses.BuildConfig
 import com.d479.xpenses.XpensesApp
 import com.d479.xpenses.analyzer.TextRecognitionAnalyzer
 import com.d479.xpenses.models.Category
-import com.d479.xpenses.models.Invoice
 import com.d479.xpenses.models.Item
 import com.d479.xpenses.viewModels.ScanViewModel
 import com.google.mlkit.vision.common.InputImage
-import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.query
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
-import io.realm.kotlin.query.find
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.runtime.MutableState
 
 
 @Composable
