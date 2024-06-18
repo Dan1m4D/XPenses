@@ -15,13 +15,14 @@ libraryBaseVersion = "1.11.0"
 lifecycleRuntimeKtx = "2.7.0"
 activityCompose = "1.8.2"
 composeBom = "2023.08.00"
-mapsCompose = "4.4.1"
-materialIconsExtended = "1.4.3"
+mapsCompose = "5.0.3"
+materialIconsExtended = "1.6.8"
 navigationCompose = "2.7.7"
 lifecycleRuntimeCompose = "2.7.0"
 googleGmsGoogleServices = "4.4.2"
 firebaseAuth = "23.0.0"
 playServicesAuth = "21.1.1"
+playServicesLocation = "21.3.0"
 playServicesMaps = "18.2.0"
 realmKotlinExtensions = "10.3.1"
 secretsGradlePlugin = "2.0.1"
@@ -60,6 +61,7 @@ library-base-v1110 = { module = "io.realm.kotlin:library-base", version.ref = "l
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
 realm-kotlin-extensions = { module = "io.realm:realm-kotlin-extensions", version.ref = "realmKotlinExtensions" }
 secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secretsGradlePlugin" }

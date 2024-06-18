@@ -108,6 +108,8 @@ dependencies {
     implementation(libs.play.services.maps)
     // Android Maps Compose composables for the Maps SDK for Android
     implementation(libs.maps.compose)
+    // Location services
+    implementation(libs.play.services.location)
 
     // dependency form realmdb
     implementation(libs.library.base)
