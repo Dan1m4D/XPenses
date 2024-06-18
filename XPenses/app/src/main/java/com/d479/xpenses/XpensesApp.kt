@@ -1,16 +1,17 @@
 package com.d479.xpenses
 
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import com.d479.xpenses.models.Category
 import com.d479.xpenses.models.Invoice
 import com.d479.xpenses.models.Item
 import com.d479.xpenses.models.User
-import com.d479.xpenses.signIn.GoogleAuthUiClient
-import com.google.android.gms.auth.api.identity.Identity
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 
-class XpensesApp: Application() {
+class XpensesApp : Application() {
 
     companion object {
         lateinit var realm: Realm
@@ -28,5 +29,12 @@ class XpensesApp: Application() {
                 )
             )
         )
+        val channel = NotificationChannel(
+            "location",
+            "Location",
+            NotificationManager.IMPORTANCE_LOW
+        )
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 }

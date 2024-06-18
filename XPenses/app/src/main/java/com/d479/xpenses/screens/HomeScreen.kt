@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Scaffold
@@ -69,30 +71,28 @@ fun HomeScreen(
         },
         floatingActionButtonPosition = FabPosition.Center,
         modifier = modifier
-            .fillMaxSize()
-    ) { paddingValues ->
-        Box(
+            .fillMaxSize(),
+    ) { paddingValues  ->
+
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues), // Apply the padding here
-            contentAlignment = Alignment.Center
+                .padding(paddingValues)
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-            ) {
-                Greeting(modifier = modifier, name = viewModel.getName())
-                AnalyticsCard(
-//                    data = listOf(
-//                        100.00,
-//                        50.00,
-//                        23.00,
-//                        123.00,
-//                        200.00,
-//                    )
+            Greeting(modifier = modifier, name = viewModel.getName())
+            AnalyticsCard(
+                data = listOf(
+                    100.00,
+                    50.00,
+                    23.00,
+                    123.00,
+                    200.00,
                 )
-            }
+            )
+
         }
+
     }
 }
