@@ -13,10 +13,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.d479.xpenses.signIn.SignInState
+import com.d479.xpenses.viewModels.CatViewModel
 
 
 @Composable
-fun SignInScreen(modifier: Modifier = Modifier, state: SignInState, onSignInClick: () -> Unit) {
+fun SignInScreen(
+    modifier: Modifier = Modifier,
+    state: SignInState,
+    onSignInClick: () -> Unit,
+    viewModel: CatViewModel
+) {
     val context = LocalContext.current
 
     // LaunchedEffect is used to show a toast when there is a sign in error

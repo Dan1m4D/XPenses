@@ -9,6 +9,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,6 +20,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -43,11 +46,20 @@ import androidx.core.content.FileProvider
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.d479.xpenses.BuildConfig
+import com.d479.xpenses.XpensesApp
 import com.d479.xpenses.analyzer.TextRecognitionAnalyzer
+import com.d479.xpenses.models.Category
+import com.d479.xpenses.models.Invoice
+import com.d479.xpenses.models.Item
+import com.d479.xpenses.viewModels.ScanViewModel
 import com.google.mlkit.vision.common.InputImage
+import io.realm.kotlin.UpdatePolicy
+import io.realm.kotlin.ext.query
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
+import io.realm.kotlin.query.find
+
 
 @Composable
 fun ScanScreen(modifier: Modifier = Modifier, navController: NavHostController) {
@@ -62,6 +74,8 @@ fun ScanScreen(modifier: Modifier = Modifier, navController: NavHostController) 
     var recognizedText by remember { mutableStateOf("") }
     val selectedWords = remember { mutableStateListOf<String>() }
     val selectedWordIndices  = remember { mutableStateListOf<Int>() }
+
+    var showSelectedWordsDialog by remember { mutableStateOf(false) }
 
     val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
         if (it) {
@@ -80,7 +94,7 @@ fun ScanScreen(modifier: Modifier = Modifier, navController: NavHostController) 
             Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
         }
     }
-    var showSelectedWordsDialog by remember { mutableStateOf(false) }
+    //var showSelectedWordsDialog by remember { mutableStateOf(false) }
 
     Column(
         Modifier
@@ -170,7 +184,8 @@ fun ScanScreen(modifier: Modifier = Modifier, navController: NavHostController) 
             Text(text = "Show Selected Words")
         }
         if (showSelectedWordsDialog) {
-            ShowSelectedWordsDialog(selectedWordIndices, recognizedText) {
+            val scanViewModel = ScanViewModel()
+            ShowSelectedWordsDialog(scanViewModel,selectedWordIndices, recognizedText) {
                 showSelectedWordsDialog = false
             }
         }
@@ -209,47 +224,94 @@ fun recognizeTextFromImage(context: Context, imageUri: Uri, onTextRecognized: (S
     }
 }
 
+
+
 @Composable
-fun ShowSelectedWordsDialog(selectedWordIndices: List<Int>, recognizedText: String, onClose: () -> Unit) {
-    val context = LocalContext.current
-
-    // Cria a lista de palavras selecionadas e remove \n de cada palavra
-    val words = recognizedText.split(" ")
+fun ShowSelectedWordsDialog(viewModel: ScanViewModel, selectedWordIndices: List<Int>, recognizedText: String, onClose: () -> Unit) {
+    val words = recognizedText.split(" ") // Divide o texto reconhecido em palavras
     val selectedWords = words.filterIndexed { index, _ -> selectedWordIndices.contains(index) }
-        .map { it.replace("\n", "") }
+        .map { it.replace("\n", "") } // Remove quebras de linha das palavras selecionadas
 
-    // Organiza as palavras em pares de item e preço
-    val organizedWords = mutableListOf<String>()
-    var tempItem = ""
+    val organizedWords = mutableListOf<String>() // Lista para armazenar as linhas organizadas
+    var tempItem = "" // Variável temporária para armazenar parcialmente uma linha
+    val itemList = mutableListOf<Item>()
+
 
     for (word in selectedWords) {
-        if (word.matches(Regex(".*\\d.*"))) {  // Verifica se a palavra contém dígitos
+        if (word.matches(Regex(".*\\d.*"))) { // Se a palavra contém dígitos (presumivelmente, um preço)
             if (tempItem.isNotEmpty()) {
-                organizedWords.add("$tempItem $word")
-                tempItem = ""
+                organizedWords.add("$tempItem $word") // Adiciona a linha completa à lista organizada
+                tempItem = "" // Limpa a variável temporária
             } else {
-                organizedWords.add(word)
+                organizedWords.add(word) // Adiciona apenas o preço, pois não há item anterior
             }
         } else {
-            tempItem = if (tempItem.isEmpty()) word else "$tempItem $word"
+            tempItem = if (tempItem.isEmpty()) word else "$tempItem $word" // Adiciona a palavra ao item temporário
         }
     }
+
+    organizedWords.forEach {line ->
+        val parts = line.split(" ")
+        val price = parts.last().replace("€", "").toDoubleOrNull() ?: return@forEach
+
+        val name = parts.dropLast(1).joinToString(" ")
+        val item = Item().apply {
+            this.name = name
+            this.price = price
+            qty = 1
+        }
+        itemList.add(item)
+    }
+
+    var totalValue = 0.0
+    itemList.forEach { item ->
+        totalValue += item.price
+    }
+
+    val realm = XpensesApp.realm
+    val categories = realm.query<Category>().find()
+
+
+    var expanded by remember { mutableStateOf(false) }
+    var selectedCategory by remember { mutableStateOf<Category?>(null) }
 
     AlertDialog(
         onDismissRequest = onClose,
         title = { Text("Selected Words") },
         text = {
             Column {
-                organizedWords.forEach { item ->
-                    Text(text = item)
+                Text("Number of Items: ${organizedWords.size}") // Exibe o número de itens
+                for (i in organizedWords.indices) {
+                    val item = organizedWords[i]
+                    Text("Item $i: $item") // Imprime cada objeto com o índice
+                }
+                Text("Total: $totalValue")
+
+                Text("Categories:")
+
+                for (category in categories) {
+                    Text(category.name)
                 }
             }
+
         },
+
         confirmButton = {
             Button(onClick = onClose) {
                 Text("Close")
             }
+        },
+        dismissButton = {
+            Button(onClick = {
+                // Aqui você chama o método createInvoice do viewModel
+                viewModel.createInvoice(itemList, totalValue)
+                onClose()
+            }) {
+                Text("Create Invoice")
+            }
         }
+
     )
 }
+
 
