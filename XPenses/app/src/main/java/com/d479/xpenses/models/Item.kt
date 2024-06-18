@@ -8,5 +8,5 @@ class Item: RealmObject {
     @PrimaryKey var _id: ObjectId = ObjectId()
     var name: String = ""
     var price: Double = 0.0 
-    var qty: Int = 0
+    var qty: Int = 1
 }

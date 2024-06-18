@@ -113,7 +113,6 @@ dependencies {
 
     // dependency form realmdb
     implementation(libs.library.base)
-
     // dependency for permissions
     implementation (libs.accompanist.permissions)
 

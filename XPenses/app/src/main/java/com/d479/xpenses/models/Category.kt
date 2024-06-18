@@ -10,5 +10,5 @@ class Category: RealmObject {
     @PrimaryKey var _id: ObjectId = ObjectId()
     var name: String = ""
     var color: String = ""
-    var invoices: RealmList<Invoice> = realmListOf()
+    //var invoices: RealmList<Invoice> = realmListOf()
 }
