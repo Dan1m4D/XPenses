@@ -17,14 +17,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -59,6 +62,10 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import io.realm.kotlin.query.find
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.runtime.MutableState
 
 
 @Composable
@@ -226,6 +233,7 @@ fun recognizeTextFromImage(context: Context, imageUri: Uri, onTextRecognized: (S
 
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShowSelectedWordsDialog(viewModel: ScanViewModel, selectedWordIndices: List<Int>, recognizedText: String, onClose: () -> Unit) {
     val words = recognizedText.split(" ") // Divide o texto reconhecido em palavras
@@ -275,6 +283,7 @@ fun ShowSelectedWordsDialog(viewModel: ScanViewModel, selectedWordIndices: List<
     var expanded by remember { mutableStateOf(false) }
     var selectedCategory by remember { mutableStateOf<Category?>(null) }
 
+
     AlertDialog(
         onDismissRequest = onClose,
         title = { Text("Selected Words") },
@@ -314,4 +323,22 @@ fun ShowSelectedWordsDialog(viewModel: ScanViewModel, selectedWordIndices: List<
     )
 }
 
+@Composable
+fun ExampleDropdownMenu() {
+    val items = listOf("Item 1", "Item 2", "Item 3")
+    var expanded by remember { mutableStateOf(false) }
+    var selectedItem by remember { mutableStateOf(items[0]) }
 
+    Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
+        Text(selectedItem, modifier = Modifier.clickable { expanded = true })
+        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            items.forEach { item ->
+                DropdownMenuItem(onClick = {
+                    selectedItem = item
+                    expanded = false
+                },
+                    text = { Text(item) })
+            }
+        }
+    }
+}

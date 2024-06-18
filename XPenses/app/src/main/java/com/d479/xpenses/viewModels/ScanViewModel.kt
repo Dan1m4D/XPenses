@@ -17,7 +17,7 @@ class ScanViewModel : ViewModel() {
         viewModelScope.launch {
             realm.write {
                 val invoice = Invoice().apply {
-                    date = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+                    date = SimpleDateFormat("yyyyMMdd_HHmm").format(Date())
                     local = "Local Name"
                     total = totalValue
                     items.addAll(itemList)
