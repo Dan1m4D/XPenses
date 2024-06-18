@@ -11,7 +11,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -23,6 +25,7 @@ import androidx.navigation.NavHostController
 import com.d479.xpenses.R
 import com.d479.xpenses.navigation.Screens
 import com.d479.xpenses.ui.components.AnalyticsCard
+import com.d479.xpenses.ui.components.InvoiceItem
 import com.d479.xpenses.ui.components.Navbar
 import com.d479.xpenses.ui.components.TitleMessage
 import com.d479.xpenses.viewModels.HomeScreenViewModel
@@ -35,6 +38,9 @@ fun HomeScreen(
     onSignOut: () -> Unit
 ) {
     val user by viewModel.user.collectAsState()
+    val invoices by viewModel.invoices.collectAsState()
+
+    val groupedInvoices = invoices.groupBy { it.date }
 
     if (user == null) {
         navController.navigate(Screens.SignIn.route)
@@ -81,15 +87,22 @@ fun HomeScreen(
         ) {
             TitleMessage(modifier = modifier, text1 = "Hello ", text2 = viewModel.getName())
             AnalyticsCard(
-                data = listOf(
-                    100.00,
-                    50.00,
-                    23.00,
-                    123.00,
-                    200.00,
-                ),
+                data = viewModel.getAnalyticsData(),
                 barTitle = "Last 7 days"
             )
+
+
+            groupedInvoices.forEach { (date, invoices) ->
+                Text(text = viewModel.formatDate(date), style = MaterialTheme.typography.bodyMedium)
+                invoices.forEach { invoice ->
+                    InvoiceItem(
+                        total = invoice.total,
+                        category = invoice.categories?.name ?: "Expense",
+                        categoryColor = Color(android.graphics.Color.parseColor(invoice.categories?.color)),
+                    )
+                }
+            }
+
 
         }
 
