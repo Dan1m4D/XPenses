@@ -1,9 +1,9 @@
 # XPenses
 
 <p align="center">
-  <img src="./XPENSES_ LOGO.png" width="200px" />
+  <img src="./images-readme/XPENSES_ LOGO.png" width="200px" />
   <h1 align="center">Expenses tracking app - Android project for ICM classes</h1>
-  <img src="./screens.png"  />
+  <img src="./images-readme/screens.png"  />
 </p>
 <hr/>
 
@@ -34,7 +34,7 @@ The `outputs.zip` is a zipped apk ready to run.
 
 ## Architecture
 
-![alt text](<diagram .png>)
+![alt text](<iimages-readme/diagram .png>)
 
 
 ## Enable google auth with firebase
@@ -46,13 +46,13 @@ Follow [this](https://medium.com/@mr.appbuilder/how-to-get-sha1-key-in-android-s
 ### **Add your key to the Firebase project**
 
 Access [FireBase Configurations](https://console.firebase.google.com/u/0/project/xpenses-de115/settings/general/android:com.d479.xpenses?hl=pt)
-![alt text](image.png)
+![alt text](images-readme/image.png)
 
 Scroll down until you find
 ![alt text](image-1.png)
 
 Click on "Adicionar impressão digital" and insert your SHA1 key.
-![alt text](<image (1).png>)
+![alt text](<images-readme/image (1).png>)
 
 Then save
 
