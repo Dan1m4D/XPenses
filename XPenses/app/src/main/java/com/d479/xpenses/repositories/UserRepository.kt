@@ -142,7 +142,7 @@ class UserRepository {
         return realm
             .query<Invoice>("date > $0", comparisonTime)
             .distinct(
-                "category",
+                "categoryId",
                 "date"
             )
             .asFlow()

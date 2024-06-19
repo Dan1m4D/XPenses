@@ -39,7 +39,9 @@ fun PieGraph(
         data.entries.forEach { item ->
             val (category, amount) = item
             val sweep = (amount / total) * 360f
-            val parsedColor = Color(parseColor(category.color))
+            val parsedColor = Color(parseColor(
+                if (category.color.isEmpty()) "#000000" else category.color
+            ))
 
             drawArc(
                 color = parsedColor,
@@ -66,7 +68,9 @@ fun PieGraph(
             val percentage = (amount / total) * 100
 
             // transform color string to Color
-            val parsedColor = Color(parseColor(category.color ?: "#000000"))
+            val parsedColor = Color(parseColor(
+                if (category.color.isEmpty()) "#000000" else category.color
+            ))
 
             LegendItem(
                 color = parsedColor,
