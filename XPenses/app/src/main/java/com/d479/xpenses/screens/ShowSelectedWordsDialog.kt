@@ -14,6 +14,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavHostController
+import com.d479.xpenses.navigation.Screens
 import com.d479.xpenses.XpensesApp
 import com.d479.xpenses.models.Category
 import com.d479.xpenses.models.Item
@@ -33,6 +35,7 @@ fun ShowSelectedWordsDialog(
     onClose: () -> Unit,
     onCategorySelected: (Category) -> Unit,
     createInvoice: (List<Item>, Double,String) -> Unit,
+    navcontroller: NavHostController
 )
 {
     Log.d("BEMVINDO", "ShowSelectedWordsDialog")
@@ -134,7 +137,7 @@ fun ShowSelectedWordsDialog(
                     val notificationId = System.currentTimeMillis().toInt()
                     notify(notificationId, builder.build())
                 }
-                onClose()
+                navcontroller.navigate(Screens.Home.route)
             }) {
                 Text("Create Invoice")
             }

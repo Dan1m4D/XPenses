@@ -26,7 +26,7 @@ class CatViewModel : ViewModel() {
     private val realm = XpensesApp.realm
 
     init {
-        createSampleEntries()
+        //createSampleEntries()
     }
     private fun createSampleEntries() {
         viewModelScope.launch {
@@ -35,11 +35,15 @@ class CatViewModel : ViewModel() {
                 if (existingCategories.isEmpty()) {
                     val cat1 = Category().apply {
                         name = "Saude"
-                        color = "blue"
+                        color = "#FF5733"
                     }
                     val cat2 = Category().apply {
                         name = "Geral"
-                        color = "blue"
+                        color = "#DAF7A6"
+                    }
+                    val cat3 = Category().apply {
+                        name = "Transporte"
+                        color = "#581845"
                     }
                     copyToRealm(
                         cat1,

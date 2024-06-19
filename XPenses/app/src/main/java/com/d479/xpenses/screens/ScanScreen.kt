@@ -203,7 +203,8 @@ fun ScanScreen(modifier: Modifier = Modifier, navController: NavHostController) 
                 selectedCategory,
                 viewModel::onDialogDismiss,
                 viewModel::onSelectedCategoryChanged,
-                viewModel::createInvoice
+                viewModel::createInvoice,
+                navController
             )
         }
     }

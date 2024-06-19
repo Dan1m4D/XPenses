@@ -57,11 +57,43 @@ class SignInViewModel : ViewModel() {
                 photoUrl = userData.profilePictureURL ?: ""
             }
         )
+        createCategories()
         createSampleEntries()
     }
 
+    fun getCategoryByName(namec: String): Category {
+        return realm
+            .query<Category>("name == $0", namec)
+            .first()
+            .find() ?: Category()
+    }
+
+    private fun createCategories() {
+        viewModelScope.launch {
+            realm.write {
+                val existingCategories = query<Category>().find()
+                    val cat1 = Category().apply {
+                        name = "Saude"
+                        color = "#FF5733"
+                    }
+                    val cat2 = Category().apply {
+                        name = "Geral"
+                        color = "#DAF7A6"
+                    }
+                    val cat3 = Category().apply {
+                        name = "Transporte"
+                        color = "#581845"
+                    }
+                    copyToRealm(cat1, updatePolicy = UpdatePolicy.ALL)
+                    copyToRealm(cat2, updatePolicy = UpdatePolicy.ALL)
+                    copyToRealm(cat3, updatePolicy = UpdatePolicy.ALL)
+
+            }
+        }
+    }
     private fun createSampleEntries() {
         viewModelScope.launch {
+
             realm.write {
                 val userIn = this
                     .query<User>()
@@ -90,19 +122,14 @@ class SignInViewModel : ViewModel() {
                         }
                     )
 
-                    val cat1 = Category().apply {
-                        name = "Saude"
-                        color = "#FF5733"
-                    }
-                    val cat2 = Category().apply {
-                        name = "Geral"
-                        color = "#DAF7A6"
-                    }
-
-                    val cat3 = Category().apply {
-                        name = "Transporte"
-                        color = "#581845"
-                    }
+//                    val cat1 = Category().apply {
+//                        name = "Saude"
+//                        color = "#FF5733"
+//                    }
+                    val cat1 = getCategoryByName("Saude")
+                    println(cat1._id)
+                    val cat2 = getCategoryByName("Geral")
+                    val cat3 = getCategoryByName("Transporte")
 
                     val invoice1 = Invoice().apply {
                         date = RealmInstant.from(1718650408L, 0)
@@ -110,6 +137,7 @@ class SignInViewModel : ViewModel() {
                         latitude = 40.638376
                         total = 100.0
                         user = userIn
+                        categoryId = cat1._id
                     }
                     val invoice2 = Invoice().apply {
                         date = RealmInstant.now()
@@ -117,6 +145,7 @@ class SignInViewModel : ViewModel() {
                         latitude = 40.637976
                         total = 23.0
                         user = userIn
+                        categoryId = cat2._id
                     }
 
                     if (userIn.name == "Made by Me") {
@@ -131,9 +160,9 @@ class SignInViewModel : ViewModel() {
                             latitude = 40.638126
                             total = 64.0
                             user = userIn
+                            categoryId = cat3._id
                         }
 
-                        invoice3.categoryId = cat3._id
                         invoice3.items.addAll(itemList)
 
                         copyToRealm(invoice3, updatePolicy = UpdatePolicy.ALL)
@@ -160,9 +189,9 @@ class SignInViewModel : ViewModel() {
 
                     copyToRealm(invoice1, updatePolicy = UpdatePolicy.ALL)
                     copyToRealm(invoice2, updatePolicy = UpdatePolicy.ALL)
-                    copyToRealm(cat1, updatePolicy = UpdatePolicy.ALL)
-                    copyToRealm(cat2, updatePolicy = UpdatePolicy.ALL)
-                    copyToRealm(cat3, updatePolicy = UpdatePolicy.ALL)
+                    //copyToRealm(cat1, updatePolicy = UpdatePolicy.ALL)
+                    //copyToRealm(cat2, updatePolicy = UpdatePolicy.ALL)
+                    //copyToRealm(cat3, updatePolicy = UpdatePolicy.ALL)
 
                 } else {
                     Log.d("CatViewModel", "User does not exist")
