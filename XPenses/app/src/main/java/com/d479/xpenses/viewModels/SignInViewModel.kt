@@ -107,14 +107,14 @@ class SignInViewModel : ViewModel() {
                     val invoice1 = Invoice().apply {
                         date = RealmInstant.from(1718650408L, 0)
                         longitude = -8.653603
-                        latitude = 40.638076
+                        latitude = 40.638376
                         total = 100.0
                         user = userIn
                     }
                     val invoice2 = Invoice().apply {
                         date = RealmInstant.now()
-                        longitude = -8.653603
-                        latitude = 40.638076
+                        longitude = -8.653703
+                        latitude = 40.637976
                         total = 23.0
                         user = userIn
                     }
@@ -127,8 +127,8 @@ class SignInViewModel : ViewModel() {
 
                         val invoice3 = Invoice().apply {
                             date = RealmInstant.from(1715650408L, 0)
-                            longitude = -8.653603
-                            latitude = 40.638076
+                            longitude = -8.653203
+                            latitude = 40.638126
                             total = 64.0
                             user = userIn
                         }

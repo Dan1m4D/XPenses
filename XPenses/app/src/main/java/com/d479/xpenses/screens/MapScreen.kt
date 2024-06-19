@@ -2,6 +2,7 @@
 package com.d479.xpenses.screens
 
 import HeaderActions
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -43,6 +44,8 @@ fun MapScreen(
     val properties = viewModel.properties.value
     val uiSettings = viewModel.uiSettings.value
     val userLocation = viewModel.getCoordinates()
+
+    val locations = viewModel.getInvoicesLocations()
 
     LaunchedEffect(userLocation) {
         println("User location: ${viewModel.getCoordinates()}")
@@ -86,6 +89,21 @@ fun MapScreen(
                     }
 
                 ) {
+                    locations.forEach { location ->
+                        Log.d("MapScreen", "Location: ${location.latitude}, ${location.longitude}")
+                        MarkerComposable(
+                            state = MarkerState(
+                                position = LatLng(location.latitude, location.longitude)
+                            )
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.LocationOn,
+                                contentDescription = "maker",
+                                modifier = modifier.size(50.dp),
+                                tint = Color.Blue
+                            )
+                        }
+                    }
                     MarkerComposable(
                         state = MarkerState(
                             position = LatLng(

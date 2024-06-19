@@ -17,10 +17,6 @@ import kotlinx.coroutines.flow.map
 class CategoryRepository {
     private val realm = XpensesApp.realm
 
-
-
-
-
     suspend fun getAllCategories(): Flow<List<Category>> {
         return realm
             .query<Category>()
