@@ -133,17 +133,18 @@ class UserRepository {
             }
 
             else -> {
-                0
+                0L
             }
         }
-        val comparisonTime = RealmInstant.from(RealmInstant.now().epochSeconds - time, 0)
+        val comparisonTime = RealmInstant.from(RealmInstant.now().epochSeconds - time, 1000)
 
 
         return realm
             .query<Invoice>("date > $0", comparisonTime)
-//            .distinct(
-//                "date",
-//            )
+            .distinct(
+                "category",
+                "date"
+            )
             .asFlow()
             .map { results ->
                 Log.d("UserRepository", "Fetched ${results.list.toList().size} invoices")
@@ -154,7 +155,7 @@ class UserRepository {
 
     fun getCategoryById(id: ObjectId): Category {
         return realm
-            .query<Category>("id == $0", id)
+            .query<Category>("_id == $0", id)
             .first()
             .find() ?: Category()
     }

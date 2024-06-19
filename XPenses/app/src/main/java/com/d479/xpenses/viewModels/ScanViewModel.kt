@@ -1,37 +1,21 @@
 package com.d479.xpenses.viewModels
 
-import android.Manifest
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.d479.xpenses.XpensesApp
+import com.d479.xpenses.managers.LocationManager
 import com.d479.xpenses.models.Category
 import com.d479.xpenses.models.Invoice
 import com.d479.xpenses.models.Item
 import com.d479.xpenses.repositories.CategoryRepository
-import io.realm.kotlin.ext.query
 import io.realm.kotlin.types.RealmInstant
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.mongodb.kbson.BsonObjectId
 import org.mongodb.kbson.ObjectId
-import java.text.SimpleDateFormat
-import java.util.Date
-import android.location.Location
-import androidx.core.app.ActivityCompat
-import androidx.lifecycle.ProcessLifecycleOwner
-import androidx.lifecycle.lifecycleScope
-import com.d479.xpenses.managers.LocationManager
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 
 class ScanViewModel() : ViewModel() {
     private val realm = XpensesApp.realm

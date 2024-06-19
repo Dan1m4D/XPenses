@@ -1,6 +1,7 @@
 package com.d479.xpenses.screens
 
 import HeaderActions
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -46,8 +47,11 @@ fun AnalyticsScreen(
     val isDialogOpen by viewModel.isDialogOpen.collectAsState()
     val filteredInvoices by viewModel.filteredInvoices.collectAsState()
 
-    val dailyTotal = viewModel.invoicesToDoubleList(filteredInvoices)
-    val invoicesByCategory = viewModel.invoicesByCategory(filteredInvoices)
+    val dailyTotal = viewModel.getAnalyticsData()
+    val invoicesByCategory = viewModel.getInvoicesByCategory(filteredInvoices)
+
+    Log.d("AnalyticsScreen", "Daily total: $dailyTotal")
+    Log.d("AnalyticsScreen", "Invoices by category 1st: $invoicesByCategory")
 
 
     Scaffold(
@@ -109,6 +113,8 @@ fun AnalyticsScreen(
             )
 
             Spacer(modifier = modifier.size(16.dp))
+
+            Log.d("AnalyticsScreen", "Invoices by category: $invoicesByCategory")
 
             SubtitleMessage(
                 modifier = modifier.padding(4.dp),

@@ -119,10 +119,10 @@ class SignInViewModel : ViewModel() {
                         user = userIn
                     }
 
-                    if (userIn.name == "Daniel Madureira") {
+                    if (userIn.name == "Made by Me") {
                         Log.d(
                             "SampleCreation",
-                            "User is Daniel Madureira -> Adding more invoices..."
+                            "User is Made by Me -> Adding more invoices..."
                         )
 
                         val invoice3 = Invoice().apply {
@@ -144,6 +144,9 @@ class SignInViewModel : ViewModel() {
                     userIn.invoices.add(invoice1)
                     userIn.invoices.add(invoice2)
 
+                    if(userIn.invoices.size >= 2 ) {
+                        return@write
+                    }
 
                     invoice1.categoryId = cat1._id
                     invoice2.categoryId = cat2._id

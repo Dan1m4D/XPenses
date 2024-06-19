@@ -31,6 +31,7 @@ import com.d479.xpenses.ui.components.InvoiceItem
 import com.d479.xpenses.ui.components.Navbar
 import com.d479.xpenses.ui.components.TitleMessage
 import com.d479.xpenses.viewModels.HomeScreenViewModel
+import java.util.Date
 
 @Composable
 fun HomeScreen(
@@ -100,6 +101,20 @@ fun HomeScreen(
                 }
             } else {
                 groupedInvoices.forEach { (date, invoices) ->
+                    println("Date: ${Date(date.epochSeconds * 1000)}")
+                    invoices.forEach { invoice ->
+                        println("Invoice: ${invoice.total}")
+                        println(
+                            "Category: ${
+                                viewModel.getCategoryById(
+                                    invoice.categoryId
+                                ).name
+                            }"
+                        )
+                    }
+                }
+
+                groupedInvoices.forEach { (date, invoices) ->
                     Text(
                         text = viewModel.formatDate(date),
                         style = MaterialTheme.typography.bodyMedium
@@ -108,8 +123,10 @@ fun HomeScreen(
                         val category = viewModel.getCategoryById(invoice.categoryId)
                         InvoiceItem(
                             total = invoice.total,
-                            category = category?.name ?: "Expense",
-                            categoryColor = Color(android.graphics.Color.parseColor(category?.color)),
+                            category = category.name,
+                            categoryColor = Color(android.graphics.Color.parseColor(
+                                if (category.color.isEmpty()) "#000000" else category.color
+                            )),
                         )
                     }
                 }
