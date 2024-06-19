@@ -49,7 +49,7 @@ Access [FireBase Configurations](https://console.firebase.google.com/u/0/project
 ![alt text](images-readme/image.png)
 
 Scroll down until you find
-![alt text](images-readme/iimage-1.png)
+![alt text](images-readme/image-1.png)
 
 Click on "Adicionar impressão digital" and insert your SHA1 key.
 ![alt text](<images-readme/image (1).png>)
