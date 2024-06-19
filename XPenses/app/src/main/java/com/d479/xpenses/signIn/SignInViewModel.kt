@@ -13,12 +13,11 @@ import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.query.Sort
+import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
 
 class SignInViewModel : ViewModel() {
     private val _state = MutableStateFlow(SignInState())
@@ -42,6 +41,12 @@ class SignInViewModel : ViewModel() {
 
     // Register the user in the repository
     suspend fun loginUser(userData: UserData) {
+
+//        // Because the compa
+//        if(userData.userId?.isBlank() == true) {
+//            Log.e("SignInViewModel", "User id cannot be blank")
+//            return
+//        }
         userRepository.registerUser(
             User().apply {
                 uid = userData.userId ?: ""
@@ -50,13 +55,10 @@ class SignInViewModel : ViewModel() {
             }
         )
         createSampleEntries()
-
     }
 
     private fun createSampleEntries() {
         viewModelScope.launch {
-
-
             realm.write {
 
                 val userIn = this
@@ -65,10 +67,10 @@ class SignInViewModel : ViewModel() {
                     .first()
                     .find()
 
-                Log.d("CatViewModel", "User: ${userIn?.name}")
+                Log.d("SampleCreation", "User: ${userIn?.name}")
 
                 if (userIn?.uid?.isNotBlank()!!) {
-                    Log.d("CatViewModel", "User already exists -> ${userIn.name}")
+                    Log.d("SampleCreation", "User already exists -> ${userIn.name}")
 
 
                     val itemList = realmListOf(
@@ -88,40 +90,42 @@ class SignInViewModel : ViewModel() {
 
                     val cat1 = Category().apply {
                         name = "Saude"
-                        color = "#00FF00"
+                        color = "#FF5733"
                     }
                     val cat2 = Category().apply {
                         name = "Geral"
-                        color = "#FF0000"
+                        color = "#DAF7A6"
                     }
 
                     val cat3 = Category().apply {
                         name = "Transporte"
-                        color = "#0000FF"
+                        color = "#581845"
                     }
 
                     val invoice1 = Invoice().apply {
-                        date = SimpleDateFormat("yyyyMMdd_HHmm").format(Date(1718650408000))
+                        date = RealmInstant.from(1718650408L, 0)
                         local = "Local Name"
                         total = 100.0
                         user = userIn
                     }
                     val invoice2 = Invoice().apply {
-                        date = SimpleDateFormat("yyyyMMdd_HHmm").format(Date())
+                        date = RealmInstant.now()
                         local = "Local Name"
                         total = 23.0
                         user = userIn
                     }
 
                     if (userIn.name == "Daniel Madureira") {
+                        Log.d("SampleCreation", "User is Daniel Madureira -> Adding more invoices...")
+
                         val invoice3 = Invoice().apply {
-                            date = SimpleDateFormat("yyyyMMdd_HHmm").format(Date(1715650408000))
+                            date = RealmInstant.from(1715650408L, 0)
                             local = "Local Name"
                             total = 64.0
                             user = userIn
                         }
 
-                        invoice3.categories = cat3
+                        invoice3.category = cat3
                         invoice3.items.addAll(itemList)
 
                         copyToRealm(invoice3, updatePolicy = UpdatePolicy.ALL)
@@ -133,14 +137,14 @@ class SignInViewModel : ViewModel() {
                     userIn.invoices.add(invoice2)
 
 
-                    invoice1.categories = cat1
-                    invoice2.categories = cat2
+                    invoice1.category = cat1
+                    invoice2.category = cat2
 
                     invoice1.items.addAll(itemList)
                     invoice2.items.addAll(itemList)
 
 
-                    Log.d("CatViewModel", "Copying to Realm... -> ${invoice1.user?.name}")
+                    Log.d("SampleCreation", "Copying to Realm... -> ${invoice1.user?.name}")
 
                     copyToRealm(invoice1, updatePolicy = UpdatePolicy.ALL)
                     copyToRealm(invoice2, updatePolicy = UpdatePolicy.ALL)

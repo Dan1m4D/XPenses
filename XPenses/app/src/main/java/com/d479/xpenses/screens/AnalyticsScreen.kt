@@ -45,6 +45,8 @@ fun AnalyticsScreen(
     val filterOptions by viewModel.filterOptions.collectAsState()
     val isDialogOpen by viewModel.isDialogOpen.collectAsState()
 
+
+
     val data = mapOf(
         "Food" to 100.0,
         "Transport" to 105.0,

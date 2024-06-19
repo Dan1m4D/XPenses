@@ -2,6 +2,7 @@ package com.d479.xpenses
 
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -31,6 +32,7 @@ import com.d479.xpenses.screens.SignInScreen
 import com.d479.xpenses.screens.SplitScreen
 import com.d479.xpenses.signIn.GoogleAuthUiClient
 import com.d479.xpenses.signIn.SignInViewModel
+import com.d479.xpenses.signIn.UserData
 import com.d479.xpenses.viewModels.AnalyticsViewModel
 import com.d479.xpenses.viewModels.CatViewModel
 import com.d479.xpenses.viewModels.HomeScreenViewModel
@@ -76,11 +78,29 @@ class MainActivity : ComponentActivity() {
                             val viewModel = viewModel<SignInViewModel>()
                             val state by viewModel.state.collectAsStateWithLifecycle()
 
+                            LaunchedEffect(true) {
+                                viewModel.loginUser(UserData(
+                                    userId = "",
+                                    username = "",
+                                    profilePictureURL = ""
+                                ))
+                                viewModel.resetState()
+
+                            }
+
                             LaunchedEffect(key1 = Unit) {
-                                if (googleAuthUiClient.getSignedInUser() != null) {
+                                viewModel.resetState()
+                                val signedInUser = googleAuthUiClient.getSignedInUser()
+
+                                if (signedInUser != null && signedInUser.userId?.isNotBlank() == true) {
                                     navController.navigate("home")
-                                    println("User already signed in -> " + googleAuthUiClient.getSignedInUser()!!)
-                                    viewModel.loginUser(googleAuthUiClient.getSignedInUser()!!)
+                                    Log.d(
+                                        "MainActivity",
+                                        "User already signed in with Google -> ${signedInUser.username}"
+                                    )
+                                    viewModel.loginUser(signedInUser)
+                                } else {
+                                    Log.d("MainActivity", "User not signed in with Google")
                                 }
                             }
 
@@ -93,7 +113,7 @@ class MainActivity : ComponentActivity() {
                                                 intent = result.data ?: return@launch
                                             )
                                             viewModel.onSignInResult(signInResult)
-                                            viewModel.loginUser(signInResult.data?: return@launch)
+                                            viewModel.loginUser(signInResult.data ?: return@launch)
                                         }
                                     }
                                 }
@@ -171,7 +191,7 @@ class MainActivity : ComponentActivity() {
                             )
 
                             //1. when the app get launched for the first time
-                            LaunchedEffect(true){
+                            LaunchedEffect(true) {
                                 locationPermissions.launchMultiplePermissionRequest()
 
                                 // get the last known location
@@ -200,7 +220,11 @@ class MainActivity : ComponentActivity() {
                         composable(Screens.Analytics.route) {
                             val analyticsViewModel = viewModel<AnalyticsViewModel>()
 
-                            AnalyticsScreen(modifier = Modifier, navController = navController, viewModel = analyticsViewModel)
+                            AnalyticsScreen(
+                                modifier = Modifier,
+                                navController = navController,
+                                viewModel = analyticsViewModel
+                            )
                         }
                         composable(Screens.Split.route) {
                             SplitScreen(modifier = Modifier, navController = navController)

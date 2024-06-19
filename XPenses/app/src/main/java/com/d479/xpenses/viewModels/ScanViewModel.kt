@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.d479.xpenses.XpensesApp
 import com.d479.xpenses.models.Invoice
 import com.d479.xpenses.models.Item
+import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -17,7 +18,7 @@ class ScanViewModel : ViewModel() {
         viewModelScope.launch {
             realm.write {
                 val invoice = Invoice().apply {
-                    date = SimpleDateFormat("yyyyMMdd_HHmm").format(Date())
+                    date = RealmInstant.now()
                     local = "Local Name"
                     total = totalValue
                     items.addAll(itemList)

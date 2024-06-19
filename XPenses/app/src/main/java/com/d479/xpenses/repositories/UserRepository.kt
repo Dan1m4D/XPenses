@@ -21,11 +21,16 @@ class UserRepository {
 
     suspend fun registerUser(user: User) {
         realm.write {
+
             // Check if a user with the same uid already exists
             val existingUser = realm
                 .query<User>("uid == $0", user.uid)
                 .first()
                 .find()
+
+            if (user.uid.isBlank()) {
+                return@write
+            }
 
             if (existingUser != null) {
                 // If a user with the same uid exists, set currentUser to that user
@@ -107,4 +112,5 @@ class UserRepository {
             }
 
     }
+
 }

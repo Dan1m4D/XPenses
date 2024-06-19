@@ -2,6 +2,7 @@ package com.d479.xpenses.screens
 
 import HeaderActions
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -17,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -39,13 +41,15 @@ fun HomeScreen(
 ) {
     val user by viewModel.user.collectAsState()
     val invoices by viewModel.invoices.collectAsState()
-
-    val groupedInvoices = invoices.groupBy { it.date }
+    val groupedInvoices = viewModel.getRecentGroupedInvoices()
 
     if (user == null) {
         navController.navigate(Screens.SignIn.route)
         onSignOut()
+
     }
+
+
 
     Scaffold(
         bottomBar = {
@@ -90,19 +94,25 @@ fun HomeScreen(
                 data = viewModel.getAnalyticsData(),
                 barTitle = "Last 7 days"
             )
-
-
-            groupedInvoices.forEach { (date, invoices) ->
-                Text(text = viewModel.formatDate(date), style = MaterialTheme.typography.bodyMedium)
-                invoices.forEach { invoice ->
-                    InvoiceItem(
-                        total = invoice.total,
-                        category = invoice.categories?.name ?: "Expense",
-                        categoryColor = Color(android.graphics.Color.parseColor(invoice.categories?.color)),
+            if (groupedInvoices.isEmpty()) {
+                Box(modifier = modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center) {
+                    Text(text = "No invoices found", style = MaterialTheme.typography.titleMedium)
+                }
+            } else {
+                groupedInvoices.forEach { (date, invoices) ->
+                    Text(
+                        text = viewModel.formatDate(date),
+                        style = MaterialTheme.typography.bodyMedium
                     )
+                    invoices.forEach { invoice ->
+                        InvoiceItem(
+                            total = invoice.total,
+                            category = invoice.category?.name ?: "Expense",
+                            categoryColor = Color(android.graphics.Color.parseColor(invoice.category?.color)),
+                        )
+                    }
                 }
             }
-
 
         }
 
