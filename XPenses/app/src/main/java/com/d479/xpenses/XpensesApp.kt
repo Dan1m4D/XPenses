@@ -4,6 +4,7 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import com.d479.xpenses.managers.LocationManager
 import com.d479.xpenses.models.Category
 import com.d479.xpenses.models.Invoice
 import com.d479.xpenses.models.Item
@@ -15,6 +16,7 @@ class XpensesApp : Application() {
 
     companion object {
         lateinit var realm: Realm
+        const val CHANNEL_ID = "invoice_channel_id"
     }
 
     override fun onCreate() {
@@ -30,11 +32,13 @@ class XpensesApp : Application() {
             )
         )
         val channel = NotificationChannel(
-            "location",
-            "Location",
+            CHANNEL_ID,
+            "Invoice Notifications",
             NotificationManager.IMPORTANCE_LOW
         )
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
+        LocationManager.initialize(this)
     }
 }

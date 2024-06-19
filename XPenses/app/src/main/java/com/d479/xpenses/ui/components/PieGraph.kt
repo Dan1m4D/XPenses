@@ -18,7 +18,7 @@ import kotlin.math.roundToInt
 @Composable
 fun PieGraph(
     modifier: Modifier = Modifier,
-    data: Map<Category?, Double>) {
+    data: Map<Category, Double>) {
     val total = data.values.sum()
     var startAngle = 0f
 

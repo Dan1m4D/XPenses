@@ -12,9 +12,11 @@ import java.util.Date
 
 class Invoice: RealmObject {
     @PrimaryKey var _id: ObjectId = ObjectId()
+    var title: String = ""
     var date: RealmInstant = RealmInstant.now()
-    var local: String = ""
-    var category: Category? = null
+    var latitude: Double = 40.638076
+    var longitude: Double = -8.653603
+    var categoryId: ObjectId = ObjectId()
     var total: Double = 0.0
     var items: RealmList<Item> = realmListOf()
     var user: User? = null

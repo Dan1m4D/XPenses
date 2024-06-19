@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.launch
+import org.mongodb.kbson.ObjectId
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -84,11 +85,14 @@ class AnalyticsViewModel : ViewModel() {
         return formatedDate?.time
     }
 
-    fun invoicesByCategory(filteredInvoices: List<Invoice>): Map<Category?, Double> {
-        val groupedInvoices = filteredInvoices.groupBy { it.category }
-            .mapValues { (_, invoices) -> invoices.sumOf { it.total }
-        }
+    fun invoicesByCategory(filteredInvoices: List<Invoice>): Map<Category, Double> {
+        val groupedInvoices = filteredInvoices.groupBy { invoice ->
+            getCategoryById(invoice.categoryId)
+        }.mapValues { (_, invoices) -> invoices.sumOf { it.total } }
         return groupedInvoices
+    }
+    fun getCategoryById(id: ObjectId): Category {
+        return userRepository.getCategoryById(id)
     }
 
 

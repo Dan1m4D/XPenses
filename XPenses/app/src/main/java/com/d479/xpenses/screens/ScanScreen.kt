@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,10 +29,12 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,6 +48,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.d479.xpenses.BuildConfig
@@ -74,7 +78,12 @@ fun ScanScreen(modifier: Modifier = Modifier, navController: NavHostController) 
     val selectedWords = remember { mutableStateListOf<String>() }
     val selectedWordIndices  = remember { mutableStateListOf<Int>() }
 
-    var showSelectedWordsDialog by remember { mutableStateOf(false) }
+    val viewModel: ScanViewModel = viewModel()
+    val isDialogOpen by viewModel.isDialogOpen.collectAsState()
+    val categories by viewModel.categories.collectAsState()
+    val selectedCategory by viewModel.selectedCategory.collectAsState()
+
+    //Log.d("CATEGORIES",categories.size.toString())
 
     val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
         if (it) {
@@ -176,17 +185,26 @@ fun ScanScreen(modifier: Modifier = Modifier, navController: NavHostController) 
                 permissionLauncher.launch(Manifest.permission.CAMERA)
             }
         }) {
-            Text(text = "Capture Image From Camera")
+            Text(text = "Capture Image From Camera ${selectedCategory?.name}")
         }
 
-        Button(onClick = { showSelectedWordsDialog = true }) {
+        Button(viewModel::onDialogShow) {
             Text(text = "Show Selected Words")
+
         }
-        if (showSelectedWordsDialog) {
-            val scanViewModel = ScanViewModel()
-            ShowSelectedWordsDialog(scanViewModel,selectedWordIndices, recognizedText) {
-                showSelectedWordsDialog = false
-            }
+        Log.d("KKKKKKK",viewModel.isDialogOpen.value.toString())
+        if (isDialogOpen) {
+            Log.d("LLLLLLLL",viewModel.isDialogOpen.value.toString())
+            //val selectedCategory = viewModel.getSelectedCategory()
+            ShowSelectedWordsDialog(
+                selectedWordIndices,
+                recognizedText,
+                categories,
+                selectedCategory,
+                viewModel::onDialogDismiss,
+                viewModel::onSelectedCategoryChanged,
+                viewModel::createInvoice
+            )
         }
     }
 }
@@ -220,117 +238,5 @@ fun recognizeTextFromImage(context: Context, imageUri: Uri, onTextRecognized: (S
     } catch (e: Exception) {
         e.printStackTrace()
         onTextRecognized("Failed to process image: ${e.message}")
-    }
-}
-
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ShowSelectedWordsDialog(viewModel: ScanViewModel, selectedWordIndices: List<Int>, recognizedText: String, onClose: () -> Unit) {
-    val words = recognizedText.split(" ") // Divide o texto reconhecido em palavras
-    val selectedWords = words.filterIndexed { index, _ -> selectedWordIndices.contains(index) }
-        .map { it.replace("\n", "") } // Remove quebras de linha das palavras selecionadas
-
-    val organizedWords = mutableListOf<String>() // Lista para armazenar as linhas organizadas
-    var tempItem = "" // Variável temporária para armazenar parcialmente uma linha
-    val itemList = mutableListOf<Item>()
-
-
-    for (word in selectedWords) {
-        if (word.matches(Regex(".*\\d.*"))) { // Se a palavra contém dígitos (presumivelmente, um preço)
-            if (tempItem.isNotEmpty()) {
-                organizedWords.add("$tempItem $word") // Adiciona a linha completa à lista organizada
-                tempItem = "" // Limpa a variável temporária
-            } else {
-                organizedWords.add(word) // Adiciona apenas o preço, pois não há item anterior
-            }
-        } else {
-            tempItem = if (tempItem.isEmpty()) word else "$tempItem $word" // Adiciona a palavra ao item temporário
-        }
-    }
-
-    organizedWords.forEach {line ->
-        val parts = line.split(" ")
-        val price = parts.last().replace("€", "").toDoubleOrNull() ?: return@forEach
-
-        val name = parts.dropLast(1).joinToString(" ")
-        val item = Item().apply {
-            this.name = name
-            this.price = price
-            qty = 1
-        }
-        itemList.add(item)
-    }
-
-    var totalValue = 0.0
-    itemList.forEach { item ->
-        totalValue += item.price
-    }
-
-    val realm = XpensesApp.realm
-    val categories = realm.query<Category>().find()
-
-
-    var expanded by remember { mutableStateOf(false) }
-    var selectedCategory by remember { mutableStateOf<Category?>(null) }
-
-
-    AlertDialog(
-        onDismissRequest = onClose,
-        title = { Text("Selected Words") },
-        text = {
-            Column {
-                Text("Number of Items: ${organizedWords.size}") // Exibe o número de itens
-                for (i in organizedWords.indices) {
-                    val item = organizedWords[i]
-                    Text("Item $i: $item") // Imprime cada objeto com o índice
-                }
-                Text("Total: $totalValue")
-
-                Text("Categories:")
-
-                for (category in categories) {
-                    Text(category.name)
-                }
-            }
-
-        },
-
-        confirmButton = {
-            Button(onClick = onClose) {
-                Text("Close")
-            }
-        },
-        dismissButton = {
-            Button(onClick = {
-                // Aqui você chama o método createInvoice do viewModel
-                viewModel.createInvoice(itemList, totalValue)
-                onClose()
-            }) {
-                Text("Create Invoice")
-            }
-        }
-
-    )
-}
-
-@Composable
-fun ExampleDropdownMenu() {
-    val items = listOf("Item 1", "Item 2", "Item 3")
-    var expanded by remember { mutableStateOf(false) }
-    var selectedItem by remember { mutableStateOf(items[0]) }
-
-    Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
-        Text(selectedItem, modifier = Modifier.clickable { expanded = true })
-        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-            items.forEach { item ->
-                DropdownMenuItem(onClick = {
-                    selectedItem = item
-                    expanded = false
-                },
-                    text = { Text(item) })
-            }
-        }
     }
 }

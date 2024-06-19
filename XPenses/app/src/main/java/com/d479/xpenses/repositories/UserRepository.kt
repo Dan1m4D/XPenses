@@ -4,6 +4,7 @@ import android.util.Log
 import com.d479.xpenses.XpensesApp
 import com.d479.xpenses.models.Invoice
 import com.d479.xpenses.models.User
+import com.d479.xpenses.models.Category
 import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.ext.realmListOf
@@ -11,6 +12,7 @@ import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
+import org.mongodb.kbson.ObjectId
 import java.util.Date
 
 class UserRepository {
@@ -149,5 +151,14 @@ class UserRepository {
             }
 
     }
+
+    fun getCategoryById(id: ObjectId): Category {
+        return realm
+            .query<Category>("id == $0", id)
+            .first()
+            .find() ?: Category()
+    }
+
+
 
 }

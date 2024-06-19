@@ -4,12 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.d479.xpenses.models.Invoice
 import com.d479.xpenses.models.User
+import com.d479.xpenses.models.Category
 import com.d479.xpenses.repositories.UserRepository
 import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.launch
+import org.mongodb.kbson.ObjectId
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -94,5 +96,9 @@ class HomeScreenViewModel : ViewModel() {
         val totalPerDaySorted = totalPerDay.toSortedMap()
 
         return totalPerDaySorted.values.toList()
+    }
+
+    fun getCategoryById(id: ObjectId): Category {
+        return userRepository.getCategoryById(id)
     }
 }

@@ -106,13 +106,15 @@ class SignInViewModel : ViewModel() {
 
                     val invoice1 = Invoice().apply {
                         date = RealmInstant.from(1718650408L, 0)
-                        local = "Local Name"
+                        longitude = -8.653603
+                        latitude = 40.638076
                         total = 100.0
                         user = userIn
                     }
                     val invoice2 = Invoice().apply {
                         date = RealmInstant.now()
-                        local = "Local Name"
+                        longitude = -8.653603
+                        latitude = 40.638076
                         total = 23.0
                         user = userIn
                     }
@@ -125,12 +127,13 @@ class SignInViewModel : ViewModel() {
 
                         val invoice3 = Invoice().apply {
                             date = RealmInstant.from(1715650408L, 0)
-                            local = "Local Name"
+                            longitude = -8.653603
+                            latitude = 40.638076
                             total = 64.0
                             user = userIn
                         }
 
-                        invoice3.category = cat3
+                        invoice3.categoryId = cat3._id
                         invoice3.items.addAll(itemList)
 
                         copyToRealm(invoice3, updatePolicy = UpdatePolicy.ALL)
@@ -142,8 +145,8 @@ class SignInViewModel : ViewModel() {
                     userIn.invoices.add(invoice2)
 
 
-                    invoice1.category = cat1
-                    invoice2.category = cat2
+                    invoice1.categoryId = cat1._id
+                    invoice2.categoryId = cat2._id
 
                     invoice1.items.addAll(itemList)
                     invoice2.items.addAll(itemList)

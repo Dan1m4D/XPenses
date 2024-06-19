@@ -82,10 +82,11 @@ fun ExpensesScreen(
                                     style = MaterialTheme.typography.bodyMedium
                                 )
                                 invoices.forEach { invoice ->
+                                    val category = viewModel.getCategoryById(invoice.categoryId)
                                     InvoiceItem(
                                         total = invoice.total,
-                                        category = invoice.category?.name ?: "Expense",
-                                        categoryColor = Color(android.graphics.Color.parseColor(invoice.category?.color)),
+                                        category = category?.name ?: "Expense",
+                                        categoryColor = Color(android.graphics.Color.parseColor(category?.color)),
                                     )
                                 }
                             }

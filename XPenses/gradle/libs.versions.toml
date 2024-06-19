@@ -29,6 +29,8 @@ secretsGradlePlugin = "2.0.1"
 textRecognition = "16.0.0"
 uiTextGoogleFonts = "1.6.8"
 visionCommon = "17.3.0"
+firebaseFirestoreKtx = "25.0.0"
+lifecycleProcess = "2.8.2"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -67,6 +69,8 @@ realm-kotlin-extensions = { module = "io.realm:realm-kotlin-extensions", version
 secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secretsGradlePlugin" }
 text-recognition = { module = "com.google.mlkit:text-recognition", version.ref = "textRecognition" }
 vision-common = { group = "com.google.mlkit", name = "vision-common", version.ref = "visionCommon" }
+firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
+androidx-lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "lifecycleProcess" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
