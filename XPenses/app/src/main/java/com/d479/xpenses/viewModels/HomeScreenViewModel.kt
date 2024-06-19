@@ -39,6 +39,8 @@ class HomeScreenViewModel : ViewModel() {
 
             val fetchedInvoices = userRepository.getUserInvoices()
             _invoices.emitAll(fetchedInvoices)
+
+
         }
     }
 
@@ -81,15 +83,28 @@ class HomeScreenViewModel : ViewModel() {
     }
 
     fun getGroupedInvoices(): SortedMap<RealmInstant, List<Invoice>> {
+        viewModelScope.launch {
+            val fetchedInvoices = userRepository.getUserInvoices()
+            _invoices.emitAll(fetchedInvoices)
+        }
         return invoices.value.groupBy { it.date }.toSortedMap(reverseOrder())
     }
 
     fun getRecentGroupedInvoices(): SortedMap<RealmInstant, List<Invoice>> {
+        viewModelScope.launch {
+            val fetchedInvoices = userRepository.getUserInvoices()
+            _invoices.emitAll(fetchedInvoices)
+        }
+
         val latestInvoices = invoices.value.takeLast(Companion.RECENT_LIMIT)
         return latestInvoices.groupBy { it.date }.toSortedMap(reverseOrder())
     }
 
     fun getAnalyticsData(): List<Double> {
+        viewModelScope.launch {
+            val fetchedInvoices = userRepository.getUserInvoices()
+            _invoices.emitAll(fetchedInvoices)
+        }
         // group invoices by day
         val invoicesPerDay = invoices.value.groupBy { it.date }
         val totalPerDay = invoicesPerDay.mapValues { (_, invoices) -> invoices.sumOf { it.total } }

@@ -1,6 +1,7 @@
 package com.d479.xpenses
 
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -9,6 +10,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -58,6 +60,7 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -152,6 +155,19 @@ class MainActivity : ComponentActivity() {
                         composable(Screens.Home.route) {
                             val localContext = LocalContext.current
                             val homeViewModel = viewModel<HomeScreenViewModel>()
+                            val locationPermissions = rememberMultiplePermissionsState(
+                                permissions = listOf(
+                                    android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+                                    android.Manifest.permission.POST_NOTIFICATIONS,
+                                    android.Manifest.permission.ACCESS_NOTIFICATION_POLICY,
+                                )
+                            )
+
+                            //1. when the app get launched for the first time
+                            LaunchedEffect(true) {
+                                locationPermissions.launchMultiplePermissionRequest()
+                            }
 
                             HomeScreen(
                                 modifier = Modifier,
@@ -185,18 +201,18 @@ class MainActivity : ComponentActivity() {
                             val localContext = LocalContext.current
                             val mapViewModel: MapViewModel = viewModel()
 
-                            // ask for location permission
                             val locationPermissions = rememberMultiplePermissionsState(
                                 permissions = listOf(
                                     android.Manifest.permission.ACCESS_COARSE_LOCATION,
-                                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+                                    android.Manifest.permission.POST_NOTIFICATIONS,
+                                    android.Manifest.permission.ACCESS_NOTIFICATION_POLICY,
                                 )
                             )
 
-                            //1. when the app get launched for the first time
+
                             LaunchedEffect(true) {
                                 locationPermissions.launchMultiplePermissionRequest()
-
                                 // get the last known location
                                 fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
                                     if (location != null) {

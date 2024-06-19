@@ -34,13 +34,19 @@ data class NavItem(
 )
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Navbar(
     modifier: Modifier,
     navController: NavController
 ) {
     val items = listOf(
+        NavItem(
+            label = "Home",
+            selectedIcon = Icons.Filled.Home,
+            unselectedIcon = Icons.Outlined.Home,
+            hasNews = false,
+            route = Screens.Home.route
+        ),
         NavItem(
             label = "Expenses",
             selectedIcon = Icons.Filled.RequestPage,
@@ -55,21 +61,15 @@ fun Navbar(
             hasNews = false,
             route = Screens.Map.route
         ),
-        NavItem(
-            label = "Home",
-            selectedIcon = Icons.Filled.Home,
-            unselectedIcon = Icons.Outlined.Home,
-            hasNews = false,
-            route = Screens.Home.route
-        ),
-        NavItem(
-            label = "Split",
-            selectedIcon = Icons.Filled.People,
-            unselectedIcon = Icons.Outlined.People,
-            hasNews = true,
-            badgeCounter = 2,
-            route = Screens.Split.route
-        ),
+
+//        NavItem(
+//            label = "Split",
+//            selectedIcon = Icons.Filled.People,
+//            unselectedIcon = Icons.Outlined.People,
+//            hasNews = true,
+//            badgeCounter = 2,
+//            route = Screens.Split.route
+//        ),
         NavItem(
             label = "Analytics",
             selectedIcon = Icons.Filled.DonutSmall,

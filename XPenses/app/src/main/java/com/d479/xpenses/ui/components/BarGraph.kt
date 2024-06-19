@@ -1,5 +1,6 @@
 package com.d479.xpenses.ui.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,6 +24,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun BarGraph(data: List<Double>, title: String = "") {
     var max by rememberSaveable { mutableDoubleStateOf(0.0) }
@@ -48,10 +50,12 @@ fun BarGraph(data: List<Double>, title: String = "") {
                 // Calculate the height of the bar based on the percentage and a max height of 100
                 val barHeight = (percentage / 100) * 80
 
+                val barLabel = if (value <= 0.0) "" else String.format("%.2f", value)
+
                 Bar(
                     height = barHeight,
                     width = barWidth,
-                    label = if (value <= 0.0) "" else value.toString(),
+                    label = barLabel,
                     maxHeight = 110.0
 
                 )

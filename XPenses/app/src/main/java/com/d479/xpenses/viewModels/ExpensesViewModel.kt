@@ -1,10 +1,12 @@
 package com.d479.xpenses.viewModels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.d479.xpenses.models.Invoice
 import com.d479.xpenses.models.User
 import com.d479.xpenses.models.Category
+import com.d479.xpenses.repositories.CategoryRepository
 import com.d479.xpenses.repositories.UserRepository
 import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,12 +27,30 @@ class ExpensesViewModel : ViewModel() {
         private const val RECENT_LIMIT = 5
     }
 
+    private val categoryRepository = CategoryRepository()
     private val userRepository = UserRepository()
+
     private val _user = MutableStateFlow<User?>(null)
     val user: StateFlow<User?> = _user
 
     private val _invoices = MutableStateFlow<List<Invoice>>(emptyList())
     val invoices: StateFlow<List<Invoice>> = _invoices
+
+    private val _filteredInvoices = MutableStateFlow(emptyList<Invoice>())
+    val filteredInvoices: StateFlow<List<Invoice>> = _filteredInvoices
+
+    private val _categoryList = MutableStateFlow(emptyList<Category>())
+    val categoryList: StateFlow<List<Category>> = _categoryList
+
+    private val _filterOptions = MutableStateFlow(listOf("Last week", "Last month", "Last year"))
+    val filterOptions: StateFlow<List<String>> = _filterOptions
+
+    private val _selectedFilter = MutableStateFlow("Last week")
+    val selectedFilter: StateFlow<String> = _selectedFilter
+
+    private val _isDialogOpen = MutableStateFlow(false)
+    val isDialogOpen: StateFlow<Boolean> = _isDialogOpen
+
 
     init {
         viewModelScope.launch {
@@ -39,21 +59,34 @@ class ExpensesViewModel : ViewModel() {
 
             val fetchedInvoices = userRepository.getUserInvoices()
             _invoices.emitAll(fetchedInvoices)
+
+            val fetchedFilteredInvoices = userRepository.getFilteredInvoices(_selectedFilter)
+            _filteredInvoices.emitAll(fetchedFilteredInvoices)
+
+            val fetchedCategories = categoryRepository.getAllCategories()
+            _categoryList.emitAll(fetchedCategories)
+
+
+
+
         }
     }
 
-    suspend fun resetState(delete: Boolean = false) {
-        _user.value = null
-        userRepository.resetCurrentUser()
-        if (delete) {
-            userRepository.deleteUser(user.value!!)
+    fun onOptionSelected(option: String) {
+        _selectedFilter.value = option
+        viewModelScope.launch {
+            val fetchedFilteredInvoices = userRepository.getFilteredInvoices(selectedFilter)
+            _filteredInvoices.emitAll(fetchedFilteredInvoices)
         }
     }
 
-    fun getName(): String {
-        return user.value?.name?.split(" ")?.get(0).toString()
+    fun onDialogOpen() {
+        _isDialogOpen.value = true
     }
 
+    fun onDialogClose() {
+        _isDialogOpen.value = false
+    }
 
     fun formatDate(input: RealmInstant): String {
         val date = Date(input.epochSeconds * 1000)
@@ -80,23 +113,13 @@ class ExpensesViewModel : ViewModel() {
         }
     }
 
-    fun getGroupedInvoices(): SortedMap<RealmInstant, List<Invoice>> {
-        return invoices.value.groupBy { it.date }.toSortedMap(reverseOrder())
+    fun getGroupedInvoices(invoices: List<Invoice>): SortedMap<RealmInstant, List<Invoice>> {
+
+        Log.d("ExpensesViewModel", "getGroupedInvoices called")
+        return invoices.groupBy { it.date }.toSortedMap(reverseOrder())
     }
 
-    fun getRecentGroupedInvoices(): SortedMap<RealmInstant, List<Invoice>> {
-        val latestInvoices = invoices.value.takeLast(Companion.RECENT_LIMIT)
-        return latestInvoices.groupBy { it.date }.toSortedMap(reverseOrder())
-    }
 
-    fun getAnalyticsData(): List<Double> {
-        // group invoices by day
-        val invoicesPerDay = invoices.value.groupBy { it.date }
-        val totalPerDay = invoicesPerDay.mapValues { (_, invoices) -> invoices.sumOf { it.total } }
-        val totalPerDaySorted = totalPerDay.toSortedMap()
-
-        return totalPerDaySorted.values.toList()
-    }
     fun getCategoryById(id: ObjectId): Category {
         return userRepository.getCategoryById(id)
     }

@@ -9,6 +9,7 @@ import com.d479.xpenses.models.Category
 import com.d479.xpenses.models.Invoice
 import com.d479.xpenses.models.Item
 import com.d479.xpenses.repositories.CategoryRepository
+import io.realm.kotlin.ext.query
 import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -43,16 +44,12 @@ class ScanViewModel() : ViewModel() {
 
     fun getCategories() {
         viewModelScope.launch {
-            val fetchedCats = catRepo.getAllCategories()
-            _categories.emitAll(fetchedCats)
+            val categories = realm.query<Category>().find()
+            _categories.value = realm.copyFromRealm(categories) // Use copyFromRealm to avoid accessing RealmObject outside of the Realm instance
         }
     }
 
     fun getSelectedCategory(): Category? {
-//        viewModelScope.launch {
-//            val fetchedCats = catRepo.getAllCategories()
-//            _selectedCategory.value = fetchedCats.first().get(0)
-//        }
         return _selectedCategory.value
     }
 
@@ -78,10 +75,6 @@ class ScanViewModel() : ViewModel() {
             val invoice = Invoice().apply {
                 title = titleInvoice
                 date = RealmInstant.now()
-//                local = location ?: Location("DEFAULT_LOCATION").apply {
-//                    latitude = 40.638076
-//                    longitude = -8.653603
-//                }
                 latitude = location?.latitude ?: 40.638076
                 longitude = location?.longitude ?: -8.653603
                 total = totalValue

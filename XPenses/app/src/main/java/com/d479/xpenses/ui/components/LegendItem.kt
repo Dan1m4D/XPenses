@@ -1,5 +1,6 @@
 package com.d479.xpenses.ui.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun LegendItem(
     modifier: Modifier = Modifier,
@@ -55,7 +57,7 @@ fun LegendItem(
             )
             Row {
                 Text(
-                    text = "$amount€ ",
+                    text = String.format("%.2f € ", amount),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )

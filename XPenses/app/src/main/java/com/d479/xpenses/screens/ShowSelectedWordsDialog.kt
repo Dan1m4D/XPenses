@@ -131,7 +131,7 @@ fun ShowSelectedWordsDialog(
                     .setSmallIcon(R.drawable.icon)
                     .setContentTitle("New Invoice")
                     .setContentText("The invoice $invoiceTitle has been added.")
-                    .setPriority(NotificationCompat.PRIORITY_LOW)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
 
                 with(NotificationManagerCompat.from(context)) {
                     val notificationId = System.currentTimeMillis().toInt()

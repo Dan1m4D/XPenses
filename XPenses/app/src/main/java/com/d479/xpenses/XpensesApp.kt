@@ -34,7 +34,7 @@ class XpensesApp : Application() {
         val channel = NotificationChannel(
             CHANNEL_ID,
             "Invoice Notifications",
-            NotificationManager.IMPORTANCE_LOW
+            NotificationManager.IMPORTANCE_HIGH
         )
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

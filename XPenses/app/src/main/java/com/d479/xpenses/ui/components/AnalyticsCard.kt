@@ -1,5 +1,6 @@
 package com.d479.xpenses.ui.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun AnalyticsCard(
     modifier: Modifier = Modifier,
@@ -58,7 +60,7 @@ fun AnalyticsCard(
                 ) {
 
                     Text(
-                        text = totalSpent.toString() ?: "0",
+                        text = String.format("%.2f", totalSpent),
                         fontSize = 36.sp,
                         fontWeight = FontWeight.Black
                     )

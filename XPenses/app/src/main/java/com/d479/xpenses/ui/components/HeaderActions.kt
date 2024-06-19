@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Logout
+import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,7 +38,7 @@ fun HeaderActions(
         title = {},
         navigationIcon = {
             Icon(
-                imageVector = Icons.Outlined.Menu,
+                imageVector = Icons.AutoMirrored.Outlined.Logout,
                 contentDescription = "Menu",
                 modifier = Modifier.size(30.dp).clickable {
                     onSignOut()

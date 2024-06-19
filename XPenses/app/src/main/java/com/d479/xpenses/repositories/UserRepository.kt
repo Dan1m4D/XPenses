@@ -2,9 +2,9 @@ package com.d479.xpenses.repositories
 
 import android.util.Log
 import com.d479.xpenses.XpensesApp
+import com.d479.xpenses.models.Category
 import com.d479.xpenses.models.Invoice
 import com.d479.xpenses.models.User
-import com.d479.xpenses.models.Category
 import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.ext.realmListOf
@@ -113,7 +113,6 @@ class UserRepository {
                 Log.d("UserRepository", "Fetched ${results.list.toList().size} invoices")
                 results.list.toList()
             }
-
     }
 
     suspend fun getFilteredInvoices(selectedFilter: StateFlow<String>): Flow<List<Invoice>> {

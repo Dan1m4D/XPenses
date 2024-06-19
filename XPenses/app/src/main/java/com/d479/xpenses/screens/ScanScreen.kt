@@ -185,7 +185,7 @@ fun ScanScreen(modifier: Modifier = Modifier, navController: NavHostController) 
                 permissionLauncher.launch(Manifest.permission.CAMERA)
             }
         }) {
-            Text(text = "Capture Image From Camera ${selectedCategory?.name}")
+            Text(text = "Scan Image")
         }
 
         Button(viewModel::onDialogShow) {
