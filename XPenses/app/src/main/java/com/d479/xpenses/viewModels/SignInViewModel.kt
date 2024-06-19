@@ -45,11 +45,11 @@ class SignInViewModel : ViewModel() {
     // Register the user in the repository
     suspend fun loginUser(userData: UserData) {
 
-//        // Because the compa
-//        if(userData.userId?.isBlank() == true) {
-//            Log.e("SignInViewModel", "User id cannot be blank")
-//            return
-//        }
+        // Because the compa
+        if(userData.userId?.isBlank() == true) {
+            Log.e("SignInViewModel", "User id cannot be blank")
+            return
+        }
         userRepository.registerUser(
             User().apply {
                 uid = userData.userId ?: ""

@@ -35,6 +35,7 @@ import com.d479.xpenses.viewModels.SignInViewModel
 import com.d479.xpenses.signIn.UserData
 import com.d479.xpenses.viewModels.AnalyticsViewModel
 import com.d479.xpenses.viewModels.CatViewModel
+import com.d479.xpenses.viewModels.ExpensesViewModel
 import com.d479.xpenses.viewModels.HomeScreenViewModel
 import com.d479.xpenses.viewModels.MapViewModel
 import com.example.compose.XPensesTheme
@@ -172,9 +173,11 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(Screens.Expenses.route) {
+                            val expensesViewModel: ExpensesViewModel = viewModel()
                             ExpensesScreen(
                                 modifier = Modifier,
                                 navController = navController,
+                                viewModel = expensesViewModel
 
                                 )
                         }

@@ -26,7 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.d479.xpenses.ui.components.AnalyticsCard
-import com.d479.xpenses.ui.components.Filter
+import com.d479.xpenses.ui.components.FilterAnalytics
 import com.d479.xpenses.ui.components.Navbar
 import com.d479.xpenses.ui.components.PieGraph
 import com.d479.xpenses.ui.components.SubtitleMessage
@@ -48,24 +48,6 @@ fun AnalyticsScreen(
 
     val dailyTotal = viewModel.invoicesToDoubleList(filteredInvoices)
     val invoicesByCategory = viewModel.invoicesByCategory(filteredInvoices)
-
-
-
-    /*val data = mapOf(
-        "Food" to 100.0,
-        "Transport" to 105.0,
-        "Entertainment" to 110.0,
-        "Health" to 115.0,
-        "Others" to 120.0
-    )*/
-
-//    val colors = listOf(
-//        "#FF5733", // Pomegranate
-//        "#DAF7A6", // Lime
-//        "#581845", // Purple
-//        "#FFC300", // Yellow
-//        "#C70039"  // Red
-//    )
 
 
     Scaffold(
@@ -112,7 +94,7 @@ fun AnalyticsScreen(
             }
 
             if (isDialogOpen) {
-                Filter(
+                FilterAnalytics(
                     modifier = Modifier.padding(16.dp),
                     options = filterOptions,
                     onOptionSelected = viewModel::onOptionSelected,
