@@ -7,11 +7,30 @@
 </p>
 <hr/>
 
-
-
 ## About the project
 
 The XPenses application aims to address the problem of keeping track of expenses in a simple and organized way. With this in mind, busy people can easily open the app after a shopping session and simply scan the invoice. In this way, they can not only keep track of their invoices but also plan ahead with valuable information regarding past invoices, such as expenses per category or per time period.
+
+## Structure
+```
+.
+├── outputs.zip
+├── README.md
+└── XPenses
+    ├── app
+    ├── build.gradle.kts
+    ├── database.rules.json
+    ├── gradle
+    ├── gradle.properties
+    ├── gradlew
+    ├── gradlew.bat
+    ├── local.defaults.properties
+    ├── local.properties
+    ├── secrets.properties
+    └── settings.gradle.kts
+```
+The `XPenses` directory holds the **Android Project** itself.
+The `outputs.zip` is a zipped apk ready to run.
 
 ## Architecture
 
