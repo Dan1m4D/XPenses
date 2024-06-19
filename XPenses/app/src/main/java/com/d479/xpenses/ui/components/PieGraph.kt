@@ -1,5 +1,7 @@
 package com.d479.xpenses.ui.components
 
+import android.graphics.Color.parseColor
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -10,17 +12,17 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.d479.xpenses.models.Category
 import kotlin.math.roundToInt
 
 @Composable
 fun PieGraph(
     modifier: Modifier = Modifier,
-    data: Map<String, Double>,
-    colors: List<String>
-) {
+    data: Map<Category?, Double>) {
     val total = data.values.sum()
     var startAngle = 0f
-    val colorsList = colors.map { Color(android.graphics.Color.parseColor(it)) }
+
+    Log.d("PieGraph", "Data: $data")
 
     Canvas(
         modifier = modifier
@@ -34,10 +36,13 @@ fun PieGraph(
 
         // transform color string to Color
 
-        data.values.forEachIndexed { index, item ->
-            val sweep = (item / total) * 360f
+        data.entries.forEachIndexed { index, item ->
+            val (category, amount) = item
+            val sweep = (amount / total) * 360f
+            val parsedColor = Color(parseColor(category?.color))
+
             drawArc(
-                color = colorsList[index % colors.size],
+                color = parsedColor,
                 startAngle = startAngle,
                 sweepAngle = sweep.toFloat(),
                 useCenter = true,
@@ -56,13 +61,16 @@ fun PieGraph(
 
     /// Draw the legend
     Column(modifier = Modifier.padding(top = 16.dp)) {
-        data.entries.toList().forEachIndexed { index, entry ->
+        data.entries.toList().forEach { entry ->
             val (category, amount) = entry
             val percentage = (amount / total) * 100
 
+            // transform color string to Color
+            val parsedColor = Color(parseColor(category?.color))
+
             LegendItem(
-                color = colorsList[index],
-                title = category,
+                color = parsedColor,
+                title = category?.name ?: "Others",
                 amount = amount,
                 percentage = percentage.roundToInt()
             )

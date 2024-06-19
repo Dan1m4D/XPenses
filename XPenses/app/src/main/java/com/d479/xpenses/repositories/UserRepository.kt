@@ -9,6 +9,7 @@ import io.realm.kotlin.ext.query
 import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import java.util.Date
 
@@ -105,6 +106,42 @@ class UserRepository {
 
         return realm
             .query<Invoice>("user == $0", managedUser)
+            .asFlow()
+            .map { results ->
+                Log.d("UserRepository", "Fetched ${results.list.toList().size} invoices")
+                results.list.toList()
+            }
+
+    }
+
+    suspend fun getFilteredInvoices(selectedFilter: StateFlow<String>): Flow<List<Invoice>> {
+        val invoices = getUserInvoices()
+
+        val time: Long = when (selectedFilter.value) {
+            "Last week" -> {
+                604800
+            }
+
+            "Last month" -> {
+                2629746
+            }
+
+            "Last year" -> {
+                31556952
+            }
+
+            else -> {
+                0
+            }
+        }
+        val comparisonTime = RealmInstant.from(RealmInstant.now().epochSeconds - time, 0)
+
+
+        return realm
+            .query<Invoice>("date > $0", comparisonTime)
+//            .distinct(
+//                "date",
+//            )
             .asFlow()
             .map { results ->
                 Log.d("UserRepository", "Fetched ${results.list.toList().size} invoices")

@@ -44,24 +44,28 @@ fun AnalyticsScreen(
     val selectedFilter by viewModel.selectedFilter.collectAsState()
     val filterOptions by viewModel.filterOptions.collectAsState()
     val isDialogOpen by viewModel.isDialogOpen.collectAsState()
+    val filteredInvoices by viewModel.filteredInvoices.collectAsState()
+
+    val dailyTotal = viewModel.invoicesToDoubleList(filteredInvoices)
+    val invoicesByCategory = viewModel.invoicesByCategory(filteredInvoices)
 
 
 
-    val data = mapOf(
+    /*val data = mapOf(
         "Food" to 100.0,
         "Transport" to 105.0,
         "Entertainment" to 110.0,
         "Health" to 115.0,
         "Others" to 120.0
-    )
+    )*/
 
-    val colors = listOf(
-        "#FF5733", // Pomegranate
-        "#DAF7A6", // Lime
-        "#581845", // Purple
-        "#FFC300", // Yellow
-        "#C70039"  // Red
-    )
+//    val colors = listOf(
+//        "#FF5733", // Pomegranate
+//        "#DAF7A6", // Lime
+//        "#581845", // Purple
+//        "#FFC300", // Yellow
+//        "#C70039"  // Red
+//    )
 
 
     Scaffold(
@@ -118,7 +122,7 @@ fun AnalyticsScreen(
             }
 
             AnalyticsCard(
-                data = data.values.toList(),
+                data = dailyTotal,
                 barTitle = selectedFilter
             )
 
@@ -129,7 +133,7 @@ fun AnalyticsScreen(
                 text1 = "Details",
                 color = MaterialTheme.colorScheme.secondary
             )
-            PieGraph(data = data, modifier = modifier.fillMaxWidth(), colors = colors)
+            PieGraph(data = invoicesByCategory, modifier = modifier.fillMaxWidth())
 
         }
     }

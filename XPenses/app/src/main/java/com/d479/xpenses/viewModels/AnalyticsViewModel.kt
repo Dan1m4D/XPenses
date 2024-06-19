@@ -1,7 +1,12 @@
 package com.d479.xpenses.viewModels
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.d479.xpenses.models.Category
 import com.d479.xpenses.models.Invoice
 import com.d479.xpenses.models.User
 import com.d479.xpenses.repositories.UserRepository
@@ -10,7 +15,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 class AnalyticsViewModel : ViewModel() {
@@ -30,6 +34,9 @@ class AnalyticsViewModel : ViewModel() {
     private val _invoices = MutableStateFlow(emptyList<Invoice>())
     val invoices: StateFlow<List<Invoice>> = _invoices
 
+    private val _filteredInvoices = MutableStateFlow(emptyList<Invoice>())
+    val filteredInvoices: StateFlow<List<Invoice>> = _filteredInvoices
+
     init {
         viewModelScope.launch {
             val fetchedUser = userRepository.getUser()
@@ -38,32 +45,29 @@ class AnalyticsViewModel : ViewModel() {
 
             val fetchedInvoices = userRepository.getUserInvoices()
             _invoices.emitAll(fetchedInvoices)
+
+            val fetchedFilteredInvoices = userRepository.getFilteredInvoices(_selectedFilter)
+            _filteredInvoices.emitAll(fetchedFilteredInvoices)
+
+
+
         }
     }
 
-    /*fun getFilteredInvoices(): List<Invoice> {
-        return invoices.value.filter { invoice ->
-            when (selectedFilter.value) {
-                "Last week" -> {
-                    dateToEpochTime(invoice.date)!! > System.currentTimeMillis() - 604800000
-                }
-                "Last month" -> {
-                    dateToEpochTime(invoice.date)!! > System.currentTimeMillis() - 2629746000
-                }
-                "Last year" -> {
-                    dateToEpochTime(invoice.date)!! > System.currentTimeMillis() - 31556952000
-                }
-                else -> {
-                    true
-                }
-            }
+    fun invoicesToDoubleList(invoices: List<Invoice>): List<Double> {
+        val groupedInvoices = invoices.groupBy { it.date }
+        return groupedInvoices.map { (date, invoices) ->
+            invoices.sumOf { it.total }
         }
-    }*/
-
+    }
 
 
     fun onOptionSelected(option: String) {
         _selectedFilter.value = option
+        viewModelScope.launch {
+            val fetchedFilteredInvoices = userRepository.getFilteredInvoices(selectedFilter)
+            _filteredInvoices.emitAll(fetchedFilteredInvoices)
+        }
     }
 
     fun onDialogOpen() {
@@ -74,10 +78,17 @@ class AnalyticsViewModel : ViewModel() {
         _isDialogOpen.value = false
     }
 
-    private fun dateToEpochTime (date:String): Long? {
+    private fun dateToEpochTime(date: String): Long? {
         val inputFormat = SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault())
         val formatedDate = inputFormat.parse(date)
         return formatedDate?.time
+    }
+
+    fun invoicesByCategory(filteredInvoices: List<Invoice>): Map<Category?, Double> {
+        val groupedInvoices = filteredInvoices.groupBy { it.category }
+            .mapValues { (_, invoices) -> invoices.sumOf { it.total }
+        }
+        return groupedInvoices
     }
 
 

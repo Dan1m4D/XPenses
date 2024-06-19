@@ -31,7 +31,7 @@ import com.d479.xpenses.screens.ScanScreen
 import com.d479.xpenses.screens.SignInScreen
 import com.d479.xpenses.screens.SplitScreen
 import com.d479.xpenses.signIn.GoogleAuthUiClient
-import com.d479.xpenses.signIn.SignInViewModel
+import com.d479.xpenses.viewModels.SignInViewModel
 import com.d479.xpenses.signIn.UserData
 import com.d479.xpenses.viewModels.AnalyticsViewModel
 import com.d479.xpenses.viewModels.CatViewModel

@@ -1,4 +1,4 @@
-package com.d479.xpenses.signIn
+package com.d479.xpenses.viewModels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -9,6 +9,9 @@ import com.d479.xpenses.models.Invoice
 import com.d479.xpenses.models.Item
 import com.d479.xpenses.models.User
 import com.d479.xpenses.repositories.UserRepository
+import com.d479.xpenses.signIn.SignInResult
+import com.d479.xpenses.signIn.SignInState
+import com.d479.xpenses.signIn.UserData
 import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.ext.realmListOf
@@ -60,7 +63,6 @@ class SignInViewModel : ViewModel() {
     private fun createSampleEntries() {
         viewModelScope.launch {
             realm.write {
-
                 val userIn = this
                     .query<User>()
                     .sort("timestamp", Sort.DESCENDING)
@@ -116,7 +118,10 @@ class SignInViewModel : ViewModel() {
                     }
 
                     if (userIn.name == "Daniel Madureira") {
-                        Log.d("SampleCreation", "User is Daniel Madureira -> Adding more invoices...")
+                        Log.d(
+                            "SampleCreation",
+                            "User is Daniel Madureira -> Adding more invoices..."
+                        )
 
                         val invoice3 = Invoice().apply {
                             date = RealmInstant.from(1715650408L, 0)
@@ -146,13 +151,13 @@ class SignInViewModel : ViewModel() {
 
                     Log.d("SampleCreation", "Copying to Realm... -> ${invoice1.user?.name}")
 
+
                     copyToRealm(invoice1, updatePolicy = UpdatePolicy.ALL)
                     copyToRealm(invoice2, updatePolicy = UpdatePolicy.ALL)
-                    copyToRealm(
-                        cat1,
-                        updatePolicy = UpdatePolicy.ALL
-                    ) // Adiciona o objeto Category ao Realm
+                    copyToRealm(cat1, updatePolicy = UpdatePolicy.ALL)
                     copyToRealm(cat2, updatePolicy = UpdatePolicy.ALL)
+                    copyToRealm(cat3, updatePolicy = UpdatePolicy.ALL)
+
                 } else {
                     Log.d("CatViewModel", "User does not exist")
                 }
